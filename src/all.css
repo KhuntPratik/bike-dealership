@@ -1,0 +1,743 @@
+:root {
+    --primary-color: #ff4d4d;
+    --secondary-color: #333;
+    --accent-color: #ffd700;
+  }
+  
+  html, body {
+    margin: 0;
+    padding: 0;
+    width: 100vw;
+    overflow-x: hidden;
+    font-family: 'Segoe UI', sans-serif;
+  }
+  
+  /* Navbar Styling */
+  .navbar {
+    background: rgba(0, 0, 0, 0.95) !important;
+    padding: 1rem 0;
+    transition: all 0.3s ease;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  }
+  
+  .navbar.scrolled {
+    padding: 0.5rem 0;
+    background: rgba(0, 0, 0, 0.98) !important;
+    box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
+  }
+  
+  .navbar-brand {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: var(--primary-color) !important;
+    display: flex;
+    align-items: center;
+    transition: all 0.3s ease;
+  }
+  
+  .navbar-brand i {
+    font-size: 2rem;
+    margin-right: 10px;
+    color: var(--primary-color);
+  }
+  
+  .navbar-brand:hover {
+    transform: translateY(-2px);
+  }
+  
+  .nav-link {
+    color: white !important;
+    font-weight: 500;
+    margin: 0 10px;
+    padding: 0.5rem 1rem !important;
+    position: relative;
+    transition: all 0.3s ease;
+  }
+  
+  .nav-link::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    width: 0;
+    height: 2px;
+    background: var(--primary-color);
+    transition: all 0.3s ease;
+    transform: translateX(-50%);
+  }
+  
+  .nav-link:hover::after {
+    width: 100%;
+  }
+  
+  .nav-link:hover {
+    color: var(--primary-color) !important;
+  }
+  
+  .nav-link i {
+    margin-right: 5px;
+    font-size: 0.9rem;
+  }
+  
+  .navbar-toggler {
+    border: none;
+    padding: 0.5rem;
+    transition: all 0.3s ease;
+  }
+  
+  .navbar-toggler:focus {
+    box-shadow: none;
+  }
+  
+  .navbar-toggler-icon {
+    background-image: none;
+    position: relative;
+    width: 24px;
+    height: 2px;
+    background: white;
+    transition: all 0.3s ease;
+  }
+  
+  .navbar-toggler-icon::before,
+  .navbar-toggler-icon::after {
+    content: '';
+    position: absolute;
+    width: 24px;
+    height: 2px;
+    background: white;
+    transition: all 0.3s ease;
+  }
+  
+  .navbar-toggler-icon::before {
+    transform: translateY(-8px);
+  }
+  
+  .navbar-toggler-icon::after {
+    transform: translateY(8px);
+  }
+  
+  .navbar-toggler[aria-expanded="true"] .navbar-toggler-icon {
+    background: transparent;
+  }
+  
+  .navbar-toggler[aria-expanded="true"] .navbar-toggler-icon::before {
+    transform: rotate(45deg);
+  }
+  
+  .navbar-toggler[aria-expanded="true"] .navbar-toggler-icon::after {
+    transform: rotate(-45deg);
+  }
+  
+  .contact-btn {
+    background: var(--primary-color);
+    color: white !important;
+    padding: 0.5rem 1.5rem !important;
+    border-radius: 25px;
+    margin-left: 1rem;
+    transition: all 0.3s ease;
+  }
+  
+  .contact-btn:hover {
+    background: white;
+    color: var(--primary-color) !important;
+    transform: translateY(-2px);
+  }
+  
+  .contact-btn i {
+    margin-right: 5px;
+  }
+  
+  /* Hero Section */
+  .hero {
+    background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)),
+                url('https://imgs.search.brave.com/Roo5_gE32xleYx60P0mjVP0vH9GgXcF7ZIW4xIDgYj4/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly93YWxs/cGFwZXJjYXQuY29t/L3cvZnVsbC8xLzgv/Zi80NjM0LTI1NjB4/MTQ0MC1kZXNrdG9w/LWhkLW1vdG9yY3lj/bGUtd2FsbHBhcGVy/LmpwZw') center/cover no-repeat fixed;
+    height: 100vh;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+  }
+  
+  .hero h1 {
+    font-size: 4rem;
+    font-weight: 800;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+  }
+  
+  .hero .lead {
+    font-size: 1.5rem;
+    margin: 1.5rem 0;
+  }
+  
+  .btn-custom {
+    background: var(--primary-color);
+    color: white;
+    padding: 12px 30px;
+    border-radius: 50px;
+    border: none;
+    font-weight: 600;
+    transition: all 0.3s ease;
+  }
+  
+  
+  /* About Section */
+  #about {
+    padding: 100px 0;
+    background: #f8f9fa;
+  }
+  
+  .section-title {
+    font-weight: 800;
+    font-size: 2.5rem;
+    margin-bottom: 2rem;
+    position: relative;
+    display: inline-block;
+  }
+  
+  
+  /* Services Section Enhanced Styling */
+  #services {
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    position: relative;
+    overflow: hidden;
+  }
+
+  
+  .service-card {
+    background: white;
+    border-radius: 15px;
+    overflow: hidden;
+    transition: all 0.3s ease;
+    position: relative;
+    z-index: 1;
+    border: none;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+  }
+  
+  .service-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+  }
+  
+  .service-card .card-img-top {
+    height: 200px;
+    object-fit: cover;
+    position: relative;
+  }
+  
+  .service-card .card-img-overlay {
+    background: linear-gradient(to bottom, rgba(0,0,0,0.1), rgba(0,0,0,0.7));
+    opacity: 0;
+    transition: all 0.3s ease;
+  }
+  
+  .service-card:hover .card-img-overlay {
+    opacity: 1;
+  }
+  
+  .service-card .card-body {
+    padding: 1.5rem;
+    text-align: center;
+    background: white;
+  }
+  
+  .service-card .service-icon {
+    width: 70px;
+    height: 70px;
+    background: var(--primary-color);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: -50px auto 20px;
+    position: relative;
+    z-index: 2;
+    box-shadow: 0 5px 15px rgba(255, 77, 77, 0.3);
+  }
+  
+  .service-card .service-icon i {
+    font-size: 30px;
+    color: white;
+  }
+  
+  .service-card .card-title {
+    color: var(--secondary-color);
+    font-weight: 700;
+    margin-bottom: 1rem;
+    font-size: 1.25rem;
+  }
+  
+  .service-card .card-text {
+    color: #6c757d;
+    font-size: 0.95rem;
+    line-height: 1.6;
+  }
+  
+  .service-card .btn-service {
+    background: transparent;
+    border: 2px solid var(--primary-color);
+    color: var(--primary-color);
+    padding: 8px 20px;
+    border-radius: 25px;
+    font-weight: 600;
+    margin-top: 1rem;
+    transition: all 0.3s ease;
+    display: inline-block;
+    text-decoration: none;
+  }
+  
+  .service-card .btn-service:hover {
+    background: var(--primary-color);
+    color: white;
+  }
+  
+  /* Contact Section */
+  #contact {
+    background: linear-gradient(rgba(0, 0, 0, 0.9), rgba(0, 0, 0, 0.9)),
+                url('https://imgs.search.brave.com/Roo5_gE32xleYx60P0mjVP0vH9GgXcF7ZIW4xIDgYj4/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly93YWxs/cGFwZXJjYXQuY29t/L3cvZnVsbC8xLzgv/Zi80NjM0LTI1NjB4/MTQ0MC1kZXNrdG9w/LWhkLW1vdG9yY3lj/bGUtd2FsbHBhcGVy/LmpwZw') center/cover fixed;
+    padding: 100px 0;
+  }
+  
+  .form-control {
+    background: rgba(255, 255, 255, 0.1);
+    border: none;
+    border-radius: 10px;
+    padding: 12px;
+    color: white;
+  }
+  
+  .form-control:focus {
+    background: rgba(255, 255, 255, 0.2);
+    color: white;
+    box-shadow: none;
+  }
+  
+  .form-control::placeholder {
+    color: rgba(0, 0, 0, 0.7);
+  }
+  
+  /* Footer */
+  footer {
+    background: var(--secondary-color);
+    padding: 2rem 0;
+  }
+  
+  /* Enhanced Responsive Design */
+  @media (max-width: 1200px) {
+    .container {
+      max-width: 95%;
+    }
+  
+    .hero h1 {
+      font-size: 3.5rem;
+    }
+  
+    .service-card .card-img-top {
+      height: 180px;
+    }
+  }
+  
+  @media (max-width: 991px) {
+    .navbar-collapse {
+      background: rgba(0, 0, 0, 0.95);
+      padding: 1rem;
+      border-radius: 10px;
+      margin-top: 1rem;
+    }
+  
+    .nav-link {
+      padding: 0.8rem 1rem !important;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+  
+    .nav-link:last-child {
+      border-bottom: none;
+    }
+  
+    .contact-btn {
+      margin: 1rem 0 0 0;
+      text-align: center;
+    }
+  
+    .hero h1 {
+      font-size: 3rem;
+    }
+  
+    .section-title {
+      font-size: 2.2rem;
+    }
+  
+    .bike-card .bike-features {
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+  
+    .bike-card .bike-feature {
+      flex: 1 1 calc(33.333% - 10px);
+      min-width: 100px;
+    }
+  
+    .filter-section .row {
+      gap: 15px;
+    }
+  
+    .filter-section .col-md-3 {
+      width: 100%;
+    }
+  }
+  
+  @media (max-width: 768px) {
+    .hero h1 {
+      font-size: 2.5rem;
+    }
+    
+    .hero .lead {
+      font-size: 1.2rem;
+    }
+  
+    .section-title {
+      font-size: 2rem;
+    }
+  
+    #about img {
+      margin: 2rem auto;
+    }
+  
+    .card {
+      margin-bottom: 2rem;
+    }
+  
+    .service-card {
+      margin-bottom: 2rem;
+    }
+  
+    .bike-card {
+      max-width: 400px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+  
+    .page-header {
+      padding: 80px 0 40px;
+    }
+  
+    .page-header h1 {
+      font-size: 2.5rem;
+    }
+  
+    .filter-section {
+      padding: 15px;
+    }
+  
+    .bike-card .bike-image {
+      height: 200px;
+    }
+  
+    .bike-card .bike-title {
+      font-size: 1.2rem;
+    }
+  
+    .bike-card .bike-price {
+      font-size: 1.3rem;
+    }
+  }
+  
+  @media (max-width: 576px) {
+    .hero h1 {
+      font-size: 2rem;
+    }
+  
+    .navbar-brand {
+      font-size: 1.5rem;
+    }
+  
+    .navbar-brand i {
+      font-size: 1.8rem;
+    }
+  
+    .section-title {
+      font-size: 1.8rem;
+    }
+  
+    .btn-custom {
+      padding: 10px 25px;
+      font-size: 0.9rem;
+    }
+  
+    .service-card .service-icon {
+      width: 60px;
+      height: 60px;
+      margin-top: -40px;
+    }
+  
+    .service-card .service-icon i {
+      font-size: 25px;
+    }
+  
+    .bike-card .bike-features {
+      flex-direction: column;
+      gap: 15px;
+    }
+  
+    .bike-card .bike-feature {
+      flex: 1 1 100%;
+    }
+  
+    .page-header h1 {
+      font-size: 2rem;
+    }
+  
+    .page-header .lead {
+      font-size: 1rem;
+    }
+  
+    .filter-section {
+      margin-bottom: 20px;
+    }
+  
+    .pagination .page-link {
+      padding: 0.5rem 0.75rem;
+      font-size: 0.9rem;
+    }
+  
+    .container {
+      width: 100% !important;
+      max-width: 100% !important;
+      padding-left: 0 !important;
+      padding-right: 0 !important;
+    }
+  }
+  
+  /* Additional Responsive Utilities */
+  .img-fluid {
+    max-width: 100%;
+    height: auto;
+  }
+  
+  .text-center-sm {
+    text-align: center;
+  }
+  
+  @media (min-width: 768px) {
+    .text-center-sm {
+      text-align: left;
+    }
+  }
+  
+  /* Responsive Spacing */
+  @media (max-width: 768px) {
+    .py-5 {
+      padding-top: 3rem !important;
+      padding-bottom: 3rem !important;
+    }
+  
+    .my-5 {
+      margin-top: 3rem !important;
+      margin-bottom: 3rem !important;
+    }
+  
+    .px-4 {
+      padding-left: 1rem !important;
+      padding-right: 1rem !important;
+    }
+  }
+  
+  /* Responsive Grid Adjustments */
+  @media (max-width: 576px) {
+    .row {
+      margin-left: -10px;
+      margin-right: -10px;
+    }
+  
+    .col, [class*="col-"] {
+      padding-left: 10px;
+      padding-right: 10px;
+    }
+  }
+  
+  /* Responsive Form Elements */
+  @media (max-width: 576px) {
+    .form-control {
+      font-size: 0.9rem;
+      padding: 0.5rem;
+    }
+  
+    .btn {
+      font-size: 0.9rem;
+      padding: 0.5rem 1rem;
+    }
+  }
+  
+  /* Responsive Navigation */
+  @media (max-width: 991px) {
+    .navbar-nav {
+      padding: 1rem 0;
+    }
+  
+    .nav-item {
+      margin: 0.5rem 0;
+    }
+  
+    .navbar-toggler {
+      padding: 0.4rem;
+    }
+  }
+  
+  /* Responsive Footer */
+  @media (max-width: 768px) {
+    footer {
+      text-align: center;
+    }
+  
+    footer .col-md-6 {
+      margin-bottom: 2rem;
+    }
+  
+    .social-links {
+      justify-content: center;
+      margin-top: 1rem;
+    }
+  }
+  
+  /* Page Header */
+  .page-header {
+    background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)),
+                url('https://imgs.search.brave.com/Roo5_gE32xleYx60P0mjVP0vH9GgXcF7ZIW4xIDgYj4/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly93YWxs/cGFwZXJjYXQuY29t/L3cvZnVsbC8xLzgv/Zi80NjM0LTI1NjB4/MTQ0MC1kZXNrdG9w/LWhkLW1vdG9yY3lj/bGUtd2FsbHBhcGVy/LmpwZw') center/cover no-repeat;
+    padding: 100px 0 50px;
+    color: white;
+    text-align: center;
+  }
+  
+  /* Filter Section */
+  .filter-section {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
+    margin-bottom: 30px;
+  }
+  
+  .filter-section .form-control {
+    border-radius: 5px;
+    border: 1px solid #ddd;
+  }
+  
+  .filter-section .btn-filter {
+    background: var(--primary-color);
+    color: white;
+    border: none;
+    padding: 8px 20px;
+    border-radius: 5px;
+    transition: all 0.3s ease;
+  }
+  
+  .filter-section .btn-filter:hover {
+    background: #ff3333;
+    transform: translateY(-2px);
+  }
+  
+  /* Bike Cards */
+  .bike-card {
+    background: white;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+    margin-bottom: 30px;
+  }
+  
+  .bike-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.15);
+  }
+  
+  .bike-card .bike-image {
+    height: 250px;
+    overflow: hidden;
+    position: relative;
+  }
+  
+  .bike-card .bike-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: all 0.3s ease;
+  }
+  
+  .bike-card:hover .bike-image img {
+    transform: scale(1.1);
+  }
+  
+  .bike-card .bike-details {
+    padding: 20px;
+  }
+  
+  .bike-card .bike-title {
+    font-size: 1.25rem;
+    font-weight: 700;
+    margin-bottom: 10px;
+    color: var(--secondary-color);
+  }
+  
+  .bike-card .bike-price {
+    color: var(--primary-color);
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-bottom: 15px;
+  }
+  
+  .bike-card .bike-features {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 15px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid #eee;
+  }
+  
+  .bike-card .bike-feature {
+    text-align: center;
+  }
+  
+  .bike-card .bike-feature i {
+    color: var(--primary-color);
+    margin-bottom: 5px;
+  }
+  
+  .bike-card .bike-feature span {
+    display: block;
+    font-size: 0.9rem;
+    color: #666;
+  }
+  
+  .bike-card .btn-view {
+    background: var(--primary-color);
+    color: white;
+    border: none;
+    padding: 8px 20px;
+    border-radius: 5px;
+    width: 100%;
+    transition: all 0.3s ease;
+  }
+  
+  .bike-card .btn-view:hover {
+    background: #ff3333;
+    transform: translateY(-2px);
+  }
+  
+  /* Pagination */
+  .pagination {
+    margin-top: 30px;
+  }
+  
+  .pagination .page-link {
+    color: var(--primary-color);
+    border: none;
+    margin: 0 5px;
+    border-radius: 5px;
+  }
+  
+  .pagination .page-item.active .page-link {
+    background: var(--primary-color);
+    color: white;
+  } 
