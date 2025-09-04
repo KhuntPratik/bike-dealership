@@ -1682,6 +1682,256 @@
     font-weight: 600;
   }
 
+  /* Modern Stat Cards */
+  .stat-card-modern {
+    border-radius: 15px;
+    padding: 2rem;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    transition: all 0.3s ease;
+    border: none;
+    height: 100%;
+    position: relative;
+  }
+
+  .stat-card-modern:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+  }
+
+  .bg-gradient-primary {
+    background: #007bff;
+  }
+
+  .bg-gradient-success {
+    background: #28a745;
+  }
+
+  .bg-gradient-warning {
+    background: #ffc107;
+  }
+
+  .bg-gradient-info {
+    background: #17a2b8;
+  }
+
+  .stat-icon-modern {
+    width: 70px;
+    height: 70px;
+    border-radius: 20px;
+    background: rgba(255,255,255,0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 1.5rem;
+    backdrop-filter: blur(10px);
+  }
+
+  .stat-content-modern {
+    position: relative;
+    z-index: 2;
+  }
+
+  .stat-label-modern {
+    color: rgba(255,255,255,0.9);
+    font-size: 0.9rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+
+  .stat-value-modern {
+    color: white;
+    font-size: 2.5rem;
+    font-weight: 800;
+    margin-bottom: 0.5rem;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+  }
+
+  .stat-trend {
+    color: rgba(255,255,255,0.8);
+    font-size: 0.8rem;
+    font-weight: 500;
+  }
+
+  /* Modern Bike Cards */
+  .inventory-header {
+    background: white;
+    padding: 2rem;
+    border-radius: 15px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  }
+
+  .inventory-title {
+    color: #2c3e50;
+    font-weight: 700;
+  }
+
+  .inventory-stats .badge {
+    padding: 0.75rem 1.5rem;
+    border-radius: 25px;
+    font-weight: 600;
+  }
+
+  .bike-card-modern {
+    background: white;
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    transition: all 0.3s ease;
+    border: none;
+    height: 100%;
+  }
+
+  .bike-card-modern:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+  }
+
+  .bike-image-modern {
+    position: relative;
+    height: 220px;
+    overflow: hidden;
+  }
+
+  .bike-image-modern img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+  }
+
+  .bike-card-modern:hover .bike-image-modern img {
+    transform: scale(1.1);
+  }
+
+  .bike-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0,0,0,0.7);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+
+  .bike-card-modern:hover .bike-overlay {
+    opacity: 1;
+  }
+
+  .bike-actions {
+    display: flex;
+    gap: 0.5rem;
+  }
+
+  .bike-actions .btn {
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+  }
+
+  .bike-actions .btn:hover {
+    transform: scale(1.1);
+  }
+
+  .bike-content {
+    padding: 1.5rem;
+  }
+
+  .bike-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 1rem;
+  }
+
+  .bike-name {
+    color: #2c3e50;
+    font-size: 1.2rem;
+    font-weight: 700;
+    margin: 0;
+    flex: 1;
+  }
+
+  .bike-price-modern {
+    color: #007bff;
+    font-size: 1.3rem;
+    font-weight: 700;
+    text-align: right;
+  }
+
+  .bike-specs {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .spec-item {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    color: #6c757d;
+    font-size: 0.9rem;
+  }
+
+  .spec-item i {
+    width: 20px;
+    text-align: center;
+  }
+
+  .bike-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 1rem;
+    border-top: 1px solid #e9ecef;
+  }
+
+  .status-badge {
+    padding: 0.25rem 0.75rem;
+    border-radius: 15px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+  }
+
+  .status-available {
+    background: #d4edda;
+    color: #155724;
+  }
+
+  .empty-state {
+    padding: 3rem;
+  }
+
+  .empty-state i {
+    opacity: 0.5;
+  }
+
+  /* Responsive adjustments */
+  @media (max-width: 768px) {
+    .stat-card-modern {
+      padding: 1.5rem;
+    }
+    
+    .stat-value-modern {
+      font-size: 2rem;
+    }
+    
+    .bike-card-modern {
+      margin-bottom: 1rem;
+    }
+  }
+
   /* Active nav link */
   .nav-link.active {
     color: var(--primary-color) !important;
@@ -1820,4 +2070,228 @@
   .profile-card label.form-label {
     font-weight: 600;
     color: #6b7280;
+  }
+
+  /* Enhanced Search Section Styling */
+  .search-section-wrapper {
+    background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+    border-radius: 20px;
+    padding: 2.5rem;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+    border: 1px solid rgba(255, 77, 77, 0.1);
+  }
+
+  .search-header {
+    margin-bottom: 2.5rem;
+  }
+
+  .search-title {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: var(--secondary-color);
+    margin-bottom: 0.5rem;
+    background: linear-gradient(135deg, var(--primary-color), #ff6b6b);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .search-subtitle {
+    font-size: 1.1rem;
+    font-weight: 400;
+    color: #6c757d;
+  }
+
+  .filter-container {
+    background: rgba(255, 255, 255, 0.8);
+    border-radius: 15px;
+    padding: 2rem;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 77, 77, 0.05);
+  }
+
+  .filter-group {
+    margin-bottom: 1.5rem;
+  }
+
+  .filter-label {
+    display: block;
+    font-weight: 600;
+    color: var(--secondary-color);
+    margin-bottom: 0.75rem;
+    font-size: 0.95rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  .select-wrapper,
+  .input-wrapper {
+    position: relative;
+  }
+
+  .filter-select,
+  .filter-input {
+    border: 2px solid #e9ecef;
+    border-radius: 12px;
+    padding: 0.875rem 1rem;
+    font-size: 0.95rem;
+    transition: all 0.3s ease;
+    background: #ffffff;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  }
+
+  .filter-select:focus,
+  .filter-input:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 0.2rem rgba(255, 77, 77, 0.15);
+    outline: none;
+    transform: translateY(-2px);
+  }
+
+  .price-display {
+    background: linear-gradient(135deg, var(--primary-color), #ff6b6b);
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 25px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    box-shadow: 0 4px 15px rgba(255, 77, 77, 0.3);
+  }
+
+  .price-slider-container {
+    padding: 1rem 0;
+  }
+
+  .price-slider {
+    position: relative;
+    height: 40px;
+  }
+
+  .slider-track {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 100%;
+    height: 6px;
+    border-radius: 3px;
+    background: #e9ecef;
+  }
+
+  .range-inputs {
+    position: relative;
+    height: 100%;
+  }
+
+  .range-slider {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 100%;
+    height: 6px;
+    background: transparent;
+    pointer-events: none;
+    -webkit-appearance: none;
+    appearance: none;
+  }
+
+  .range-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: var(--primary-color);
+    cursor: pointer;
+    border: 3px solid #ffffff;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    pointer-events: auto;
+    transition: all 0.3s ease;
+  }
+
+  .range-slider::-webkit-slider-thumb:hover {
+    transform: scale(1.2);
+    box-shadow: 0 4px 15px rgba(255, 77, 77, 0.4);
+  }
+
+  .range-slider::-moz-range-thumb {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: var(--primary-color);
+    cursor: pointer;
+    border: 3px solid #ffffff;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    pointer-events: auto;
+    transition: all 0.3s ease;
+  }
+
+  .range-slider::-moz-range-thumb:hover {
+    transform: scale(1.2);
+    box-shadow: 0 4px 15px rgba(255, 77, 77, 0.4);
+  }
+
+  .filter-actions {
+    text-align: center;
+    padding-top: 1rem;
+  }
+
+  .btn-search {
+    background: linear-gradient(135deg, var(--primary-color), #ff6b6b);
+    border: none;
+    color: white;
+    font-weight: 600;
+    border-radius: 50px;
+    padding: 1rem 2rem;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(255, 77, 77, 0.3);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  .btn-search:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(255, 77, 77, 0.4);
+    color: white;
+  }
+
+  .btn-reset {
+    background: transparent;
+    border: 2px solid #6c757d;
+    color: #6c757d;
+    font-weight: 600;
+    border-radius: 50px;
+    padding: 1rem 2rem;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  .btn-reset:hover {
+    background: #6c757d;
+    color: white;
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(108, 117, 125, 0.3);
+  }
+
+  /* Responsive adjustments */
+  @media (max-width: 768px) {
+    .search-section-wrapper {
+      padding: 1.5rem;
+      margin: 0 1rem;
+    }
+    
+    .search-title {
+      font-size: 2rem;
+    }
+    
+    .filter-container {
+      padding: 1.5rem;
+    }
+    
+    .btn-search,
+    .btn-reset {
+      padding: 0.875rem 1.5rem;
+      font-size: 0.9rem;
+    }
   }

@@ -99,10 +99,6 @@ const Profile = () => {
                   <label className="form-label">Gender</label>
                   <input className="form-control" value={display.gender || ""} readOnly />
                 </div>
-                <div className="col-md-6">
-                  <label className="form-label">User ID</label>
-                  <input className="form-control" value={display.userId || display.id || jwtUser.userId || ""} readOnly />
-                </div>
               </div>
 
               

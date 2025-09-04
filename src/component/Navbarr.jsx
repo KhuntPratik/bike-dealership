@@ -98,14 +98,7 @@ const Navbarr = () => {
 									</>
 								)}
 								
-								{/* Customer navigation */}
-								{isCustomer() && (
-									<li className="nav-item">
-										<NavLink className={({isActive}) => `nav-link customer-link ${isActive ? 'active' : ''}`} to="/book-bike" onClick={collapseIfOpen}>
-											<i className="fas fa-calendar-check"></i> Book Bike
-										</NavLink>
-									</li>
-								)}
+								
 							</>
 						)}
 						
