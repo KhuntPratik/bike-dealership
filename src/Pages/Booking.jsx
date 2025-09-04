@@ -9,6 +9,8 @@ function BikeBooking() {
     bookingId: 0,
     userId: "", 
     bikeId: "",
+    AadharNumber: "",
+    AadharCardPhoto: "",
     modifiedAt: new Date().toISOString(),
     bookingDate: new Date().toISOString(),
   });
@@ -97,6 +99,29 @@ function BikeBooking() {
               />
             </div>
 
+             <div className="col-md-6">
+              <label className="form-label">Adhar Number</label>
+              <input
+                type="text"
+                className="form-control border border-black text-black"
+                name="AadharNumber"
+                value={formData.AadharNumber}
+                onChange={handleChange}
+              />
+            </div>
+
+             <div className="col-md-6">
+              <label className="form-label">AdharCard Photo</label>
+              <input
+                type="text"
+                className="form-control border border-black text-black"
+                name="AadharNumber"
+                value={formData.AadharNumber}
+                onChange={handleChange}
+              />
+            </div>
+
+
             <div className="col-md-6">
               <label className="form-label">Booking Date</label>
               <input
@@ -108,6 +133,8 @@ function BikeBooking() {
               />
             </div>
 
+            
+           
             <div className="col-md-6">
               <label className="form-label">Modified At</label>
               <input

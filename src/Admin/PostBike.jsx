@@ -74,24 +74,6 @@ function AddBikeForm() {
     <div className="container mt-5">
       <h2 className="mb-4">Add New Bike</h2>
       <form onSubmit={handleSubmit} className="row g-4">
-        {/* Dealer */}
-        <div className="col-md-6">
-          <label className="form-label">Dealer</label>
-          <select
-            name="dealerId"
-            className="form-select border border-secondary"
-            value={formData.dealerId}
-            onChange={handleChange}
-            required
-          >
-            <option value="">-- Select Dealer --</option>
-            {dealers.map((d) => (
-              <option key={d.dealerId} value={d.dealerId}>
-                {d.dealerName}
-              </option>
-            ))}
-          </select>
-        </div>
 
         {/* Brand */}
         <div className="col-md-6">
