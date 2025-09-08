@@ -7,41 +7,36 @@ function AddBikeForm() {
   const token = getToken && getToken();
   const navigate = useNavigate();
 
-  const authHeaders = token
-    ? { Authorization: `Bearer ${token}` }
-    : {};
+  const authHeaders = token ? { Authorization: `Bearer ${token}` } : {};
 
   const [brands, setBrands] = useState([]);
   const [formData, setFormData] = useState({
     brandId: "",
     bikeNumber: "",
-    bike: "",      // bike display/name expected by backend
+    bike: "",
     model: "",
     km: "",
     owner: "",
     price: "",
     color: "",
-    imageUrl1: "",
-    imageUrl2: "",
-    imageUrl3: "",
-    imageUrl4: "",
+    imageFile1: null,
+    imageFile2: null,
+    imageFile3: null,
+    imageFile4: null,
   });
-  
 
-  // Load dealers and brands
+  const [previews, setPreviews] = useState({});
+
+  // Load brands
   useEffect(() => {
     fetch("http://localhost:5275/api/Bike/BradnDropdown", {
       headers: { ...authHeaders },
     })
       .then((res) => {
-        if (res.status === 401) {
-          throw new Error("Unauthorized: Please login again.");
-        }
-        if (res.status === 403) {
-          throw new Error("Forbidden: Only Admins can access this resource.");
-        }
+        if (res.status === 401) throw new Error("Unauthorized: Please login again.");
+        if (res.status === 403) throw new Error("Forbidden: Only Admins can access this resource.");
         return res.json();
-      }) 
+      })
       .then((data) => setBrands(Array.isArray(data) ? data : []))
       .catch((err) => {
         console.error("Error loading brands", err);
@@ -58,6 +53,14 @@ function AddBikeForm() {
     }
   };
 
+  const handleFileChange = (e, fieldName) => {
+    const file = e.target.files[0];
+    setFormData((prev) => ({ ...prev, [fieldName]: file }));
+    if (file) {
+      setPreviews((prev) => ({ ...prev, [fieldName]: URL.createObjectURL(file) }));
+    }
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
 
@@ -68,77 +71,60 @@ function AddBikeForm() {
     }
 
     const info = getUserInfo ? getUserInfo() : {};
-    const derivedDealerId = info?.dealerId || info?.DealerId || info?.dealerID || info?.dealer_id || undefined;
+    const derivedDealerId =
+      info?.dealerId || info?.DealerId || info?.dealerID || info?.dealer_id || undefined;
 
-    const payload = {
-      ...formData,
-      // canonical (lowerCamel) payload
-      brandId: formData.brandId ? Number(formData.brandId) : formData.brandId,
-      model: formData.model !== undefined && formData.model !== null ? String(formData.model) : "",
-      km: formData.km ? Number(formData.km) : 0,
-      price: formData.price ? Number(formData.price) : 0,
-      ...(derivedDealerId ? { dealerId: Number(derivedDealerId) } : {}),
-      // add PascalCase aliases to satisfy backend validators
-      BikeName: formData.bike || formData.bikeName || "",
-      BrandId: formData.brandId ? Number(formData.brandId) : undefined,
-      BikeNumber: formData.bikeNumber || "",
-      Model: formData.model !== undefined && formData.model !== null ? String(formData.model) : "",
-      Km: formData.km ? Number(formData.km) : 0,
-      Price: formData.price ? Number(formData.price) : 0,
-      Color: formData.color || "",
-      ImageUrl1: formData.imageUrl1 || "",
-      ImageUrl2: formData.imageUrl2 || "",
-      ImageUrl3: formData.imageUrl3 || "",
-      ImageUrl4: formData.imageUrl4 || "",
-      DealerId: derivedDealerId ? Number(derivedDealerId) : undefined,
-    };
+    const form = new FormData();
+    form.append("BrandId", formData.brandId);
+    form.append("BikeNumber", formData.bikeNumber);
+    form.append("BikeName", formData.bike || "");
+    form.append("Model", formData.model);
+    form.append("Km", formData.km);
+    form.append("Owner", formData.owner);
+    form.append("Price", formData.price);
+    form.append("Color", formData.color);
 
-    // Diagnostics
-    console.log("[PostBike] role:", getRole && getRole());
-    console.log("[PostBike] userInfo:", info);
-    console.log("[PostBike] payload to POST /api/Bike:", payload);
-    console.log("[PostBike] auth header present:", !!authHeaders.Authorization);
+    if (derivedDealerId) {
+      form.append("DealerId", derivedDealerId);
+    }
+
+    [1, 2, 3, 4].forEach((n) => {
+      if (formData[`imageFile${n}`]) {
+        form.append(`ImageFile${n}`, formData[`imageFile${n}`]);
+      }
+    });
 
     fetch("http://localhost:5275/api/Bike", {
       method: "POST",
-      headers: { "Content-Type": "application/json", Accept: "application/json", ...authHeaders },
-      body: JSON.stringify(payload),
+      headers: { ...authHeaders }, // do not set Content-Type manually
+      body: form,
     })
       .then((res) => {
-        if (res.status === 401) {
-          throw new Error("Unauthorized: Your session has expired. Please login again.");
-        }
-        if (res.status === 403) {
-          // Try to surface backend reason
-          return (res.text ? res.text() : Promise.resolve(""))
-            .then((t) => {
-              const reason = t && t.length < 300 ? t : "You do not have permission to add a bike.";
-              throw new Error(`Forbidden: ${reason}`);
-            });
-        }
-        if (res.ok) {
-          alert("✅ Bike added successfully!");
-          setFormData({
-            brandId: "",
-            bikeNumber: "",
-            bike: "",
-            model: "",
-            km: "",
-            owner: "",
-            price: "",
-            color: "",
-            imageUrl1: "",
-            imageUrl2: "",
-            imageUrl3: "",
-            imageUrl4: "",
-          });
-          navigate("/admin");
-        } else {
-          return res.text().then((t) => {
-            const msg = t || "Failed to add bike.";
-            throw new Error(msg);
-          });
-        }
+        if (res.status === 401) throw new Error("Unauthorized: Your session has expired.");
+        if (res.status === 403) return res.text().then((t) => {
+          throw new Error(t || "You do not have permission to add a bike.");
+        });
+        if (!res.ok) return res.text().then((t) => { throw new Error(t || "Failed to add bike."); });
+        return res.json();
+      })
+      .then(() => {
+        alert("✅ Bike added successfully!");
+        setFormData({
+          brandId: "",
+          bikeNumber: "",
+          bike: "",
+          model: "",
+          km: "",
+          owner: "",
+          price: "",
+          color: "",
+          imageFile1: null,
+          imageFile2: null,
+          imageFile3: null,
+          imageFile4: null,
+        });
+        setPreviews({});
+        navigate("/admin");
       })
       .catch((err) => {
         console.error("Error:", err);
@@ -153,7 +139,17 @@ function AddBikeForm() {
 
         {/* Brand */}
         <div className="col-md-6">
-          <label className="form-label">Brand</label>
+          <div className="d-flex justify-content-between align-items-center mb-2">
+            <label className="form-label mb-0">Brand</label>
+            <button
+              type="button"
+              className="btn btn-outline-primary btn-sm"
+              onClick={() => navigate("/brand-management")}
+              title="Manage Brands"
+            >
+              <i className="fas fa-tags me-1"></i>Manage Brands
+            </button>
+          </div>
           <select
             name="brandId"
             className="form-select border border-secondary"
@@ -184,7 +180,7 @@ function AddBikeForm() {
           />
         </div>
 
-        {/* Bike Name (maps to backend 'bike') */}
+        {/* Bike Name */}
         <div className="col-md-6">
           <label className="form-label">Bike Name</label>
           <input
@@ -268,18 +264,24 @@ function AddBikeForm() {
           />
         </div>
 
-        {/* Image URLs */}
+        {/* Image Uploads */}
         {[1, 2, 3, 4].map((n) => (
           <div className="col-md-6" key={n}>
-            <label className="form-label">{`Image URL ${n}`}</label>
+            <label className="form-label">{`Image ${n}`}</label>
             <input
-              type="text"
-              name={`imageUrl${n}`}
-              placeholder={`Enter image URL ${n}`}
-              className="form-control text-black border border-secondary"
-              value={formData[`imageUrl${n}`]}
-              onChange={handleChange}
+              type="file"
+              accept="image/*"
+              className="form-control border border-secondary"
+              onChange={(e) => handleFileChange(e, `imageFile${n}`)}
             />
+            {previews[`imageFile${n}`] && (
+              <img
+                src={previews[`imageFile${n}`]}
+                alt={`Preview ${n}`}
+                className="img-thumbnail mt-2"
+                style={{ maxHeight: "150px" }}
+              />
+            )}
           </div>
         ))}
 

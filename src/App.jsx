@@ -14,6 +14,11 @@ import EditBike from "./Admin/EditBike";
 import BikeBooking from "./Pages/Booking";
 import PaymentPage from "./Pages/Payment";
 import ProtectedRoute from "./component/ProtectedRoute";
+import BookingDetails from "./Admin/BookingDetails";
+import MyBookings from "./Pages/MyBookings";
+import Profile from "./Pages/Profile";
+import BrandManagement from "./Admin/BrandManagement";
+import Insurance from "./Pages/Insurance";
 
 function App() {
 
@@ -68,14 +73,51 @@ function App() {
       </ProtectedRoute>
     }
   />
+
     <Route
-    path="//BookingManagement"
+    path="/MyBookings"
+    element={
+      <ProtectedRoute>
+        <MyBookings />
+      </ProtectedRoute>
+    }
+  />
+    <Route
+    path="/BookingManagement"
     element={
       <ProtectedRoute>
         <BookingManagement />
       </ProtectedRoute>
     }
   />
+
+  <Route
+    path="/brand-management"
+    element={
+      <ProtectedRoute>
+        <BrandManagement />
+      </ProtectedRoute>
+    }
+  />
+
+  <Route
+    path="/booking/:id"
+    element={
+      <ProtectedRoute>
+        <BookingDetails />
+      </ProtectedRoute>
+    }
+  />
+
+  <Route
+    path="/profile"
+    element={
+      <ProtectedRoute>
+        <Profile />
+      </ProtectedRoute>
+    }
+  />
+
   <Route
     path="/edit-bike/:id"
     element={
@@ -97,6 +139,14 @@ function App() {
     element={
       <ProtectedRoute>
         <PaymentPage />
+      </ProtectedRoute>
+    }
+  />
+  <Route
+    path="/insurance"
+    element={
+      <ProtectedRoute>
+        <Insurance />
       </ProtectedRoute>
     }
   />

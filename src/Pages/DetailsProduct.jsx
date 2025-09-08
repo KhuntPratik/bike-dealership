@@ -32,11 +32,10 @@ function BikeDetails() {
 
   // Extract image URLs
   const images = [
-    bike.imageUrl1,
-    bike.imageUrl2,
-    bike.imageUrl3,
-    bike.imageUrl4,
-    bike.imageUrl5,
+    `http://localhost:5275/${bike.imageUrl1}`,
+    `http://localhost:5275/${bike.imageUrl2}`,
+    `http://localhost:5275/${bike.imageUrl3}`,
+    `http://localhost:5275/${bike.imageUrl4}`
   ].filter(Boolean);
 
   return (
@@ -56,12 +55,15 @@ function BikeDetails() {
                     className={`carousel-item ${index === 0 ? "active" : ""}`}
                     key={index}
                   >
-                    <img
-                      src={img}
-                      className="d-block w-100"
-                      alt={`Slide ${index + 1}`}
-                      style={{ height: "320px", objectFit: "cover" }}
-                    />
+                    <div className="d-flex align-items-center justify-content-center w-100" style={{ height: "360px", backgroundColor: "#f8f9fa", overflow: "hidden" }}>
+                      <img
+                        src={img}
+                        className="d-block"
+                        alt={`Slide ${index + 1}`}
+                        style={{ height: "100%", width: "auto", objectFit: "contain" }}
+                        loading="lazy"
+                      />
+                    </div>
                   </div>
                 ))}
               </div>

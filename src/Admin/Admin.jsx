@@ -149,6 +149,12 @@ function Admin() {
                 >
                   <i className="fas fa-motorcycle me-2"></i> BookingManagement
                 </button>
+                <button
+                  className="btn btn-outline-info"
+                  onClick={() => navigate("/brand-management")}
+                >
+                  <i className="fas fa-tags me-2"></i> Brand Management
+                </button>
 
 
               </div>
@@ -222,15 +228,52 @@ function Admin() {
                 Manage your full bike list below
               </small>
             </div>
-            {bike.map((bike, index) => (
-              <div className="col-md-4" key={bike?.bikeId ?? index}>
-                <div className="bike-card shadow rounded p-3">
-                  <div className="bike-image">
+            {bike.length === 0 ? (
+              <div className="col-12">
+                <div className="text-center py-5">
+                  <div className="mb-4">
+                    <i className="fas fa-motorcycle text-muted" style={{ fontSize: '4rem' }}></i>
+                  </div>
+                  <h4 className="text-muted mb-3">No Bikes Available</h4>
+                  <p className="text-muted">There are no bikes in your inventory at the moment.</p>
+                  <button
+                    className="btn btn-primary mt-3"
+                    onClick={() => navigate("/postbike")}
+                  >
+                    <i className="fas fa-plus me-2"></i>Add Your First Bike
+                  </button>
+                </div>
+              </div>
+            ) : (
+              bike.map((bike, index) => (
+              <div className="col-md-4 mb-4" key={bike?.bikeId ?? index}>
+                <div className="bike-card shadow rounded p-3 h-100" style={{
+                  transition: 'all 0.3s ease',
+                  border: '1px solid #e9ecef'
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.transform = 'translateY(-5px)';
+                  e.currentTarget.style.boxShadow = '0 10px 25px rgba(0,0,0,0.15)';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.transform = 'translateY(0)';
+                  e.currentTarget.style.boxShadow = '0 2px 10px rgba(0,0,0,0.1)';
+                }}>
+                  <div className="bike-image position-relative" style={{ height: "320px", backgroundColor: "#f8f9fa", display: "flex", alignItems: "center", justifyContent: "center", overflow: "hidden" }}>
                     <img
-                      src={bike.imageUrl1}
+                      src={bike.imageUrl1 ? `http://localhost:5275/${bike.imageUrl1}` : '/placeholder-bike.jpg'}
                       alt={bike?.bikeName || "Bike"}
                       className="img-fluid rounded"
-                      style={{ height: "200px", objectFit: "cover" }}
+                      style={{ 
+                        height: "100%", 
+                        objectFit: "contain", 
+                        width: "auto",
+                        backgroundColor: "transparent"
+                      }}
+                      loading="lazy"
+                      onError={(e) => {
+                        e.target.src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzAwIiBoZWlnaHQ9IjIwMCIgdmlld0JveD0iMCAwIDMwMCAyMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIzMDAiIGhlaWdodD0iMjAwIiBmaWxsPSIjRjhGOUZBIi8+CjxwYXRoIGQ9Ik0xMjUgNzVIMTc1VjEyNUgxMjVWNzVaIiBmaWxsPSIjREREREREIi8+CjxwYXRoIGQ9Ik0xMzUgODVIMTY1VjExNUgxMzVWODVaIiBmaWxsPSIjQ0NDQ0NDIi8+CjxjaXJjbGUgY3g9IjE0NSIgY3k9IjEwNSIgcj0iNSIgZmlsbD0iI0ZGRkZGRiIvPgo8dGV4dCB4PSIxNTAiIHk9IjE1MCIgZmlsbD0iIzk5OTk5OSIgZm9udC1mYW1pbHk9IkFyaWFsLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjE0IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj5CSUtFIE1BR0U8L3RleHQ+Cjwvc3ZnPgo=';
+                      }}
                     />
                   </div>
                   <div className="bike-details mt-3">
@@ -253,30 +296,34 @@ function Admin() {
                       </div>
                     </div>
 
-                    <div className="d-flex justify-content-between mt-4">
+                    <div className="d-flex justify-content-between mt-4 gap-2">
                       <button
-                        className="btn btn-outline-primary"
+                        className="btn btn-outline-primary btn-sm flex-fill"
                         onClick={() => bike?.bikeId && navigate(`/product/${bike.bikeId}`)}
+                        style={{ fontSize: '0.85rem' }}
                       >
-                        View
+                        <i className="fas fa-eye me-1"></i>View
                       </button>
                       <button
-                        className="btn btn-warning"
+                        className="btn btn-warning btn-sm flex-fill"
                         onClick={() => bike?.bikeId && navigate(`/edit-bike/${bike.bikeId}`)}
+                        style={{ fontSize: '0.85rem' }}
                       >
-                        Edit
+                        <i className="fas fa-edit me-1"></i>Edit
                       </button>
                       <button
-                        className="btn btn-danger"
+                        className="btn btn-danger btn-sm flex-fill"
                         onClick={() => handleDelete(bike)}
+                        style={{ fontSize: '0.85rem' }}
                       >
-                        Delete
+                        <i className="fas fa-trash me-1"></i>Delete
                       </button>
                     </div>
                   </div>
                 </div>
               </div>
-            ))}
+              ))
+            )}
           </div>
 
 

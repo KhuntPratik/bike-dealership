@@ -22,13 +22,18 @@ function EditBike() {
     owner: "",
     price: "",
     color: "",
-    imageUrl1: "",
-    imageUrl2: "",
-    imageUrl3: "",
-    imageUrl4: "",
   });
 
-  // ✅ If not Admin, redirect immediately
+  const [files, setFiles] = useState({
+    imageFile1: null,
+    imageFile2: null,
+    imageFile3: null,
+    imageFile4: null,
+  });
+
+  const [previews, setPreviews] = useState({});
+
+  // ✅ Only Admin can access
   useEffect(() => {
     if (user.role !== "Admin") {
       alert("❌ Only Admin can access Edit Bike");
@@ -40,7 +45,16 @@ function EditBike() {
   useEffect(() => {
     fetch(`http://localhost:5275/api/Bike/${id}`, { headers: { ...authHeaders } })
       .then((res) => res.json())
-      .then((data) => setFormData(data))
+      .then((data) => {
+        setFormData(data);
+        // load existing images as previews
+        setPreviews({
+          imageFile1: data.imageUrl1 ? `http://localhost:5275/${data.imageUrl1}` : null,
+          imageFile2: data.imageUrl2 ? `http://localhost:5275/${data.imageUrl2}` : null,
+          imageFile3: data.imageUrl3 ? `http://localhost:5275/${data.imageUrl3}` : null,
+          imageFile4: data.imageUrl4 ? `http://localhost:5275/${data.imageUrl4}` : null,
+        });
+      })
       .catch((err) => console.error("Error loading bike", err));
   }, [id]);
 
@@ -57,26 +71,37 @@ function EditBike() {
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
+  const handleFileChange = (e, field) => {
+    const file = e.target.files[0];
+    setFiles((prev) => ({ ...prev, [field]: file }));
+    if (file) {
+      setPreviews((prev) => ({ ...prev, [field]: URL.createObjectURL(file) }));
+    }
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    const payload = {
-      ...formData,
-      bikeId: id ? Number(id) : formData.bikeId,
-      brandId: formData.brandId ? Number(formData.brandId) : formData.brandId,
-      // keep model as string (no Number conversion ❌)
-      model: formData.model ? String(formData.model) : "",
-      km: formData.km ? Number(formData.km) : 0,
-      price: formData.price ? Number(formData.price) : 0,
-      // add required field "bike" (if backend expects object name)
-      bike: formData.bike || formData.bikeName, 
-    };
-    
+    const form = new FormData();
+    form.append("BikeNumber", formData.bikeNumber);
+    form.append("BrandId", formData.brandId);
+    form.append("BikeName", formData.bikeName);
+    form.append("Model", formData.model);
+    form.append("Km", formData.km);
+    form.append("Owner", formData.owner);
+    form.append("Price", formData.price);
+    form.append("Color", formData.color);
+
+    // attach files if chosen
+    if (files.imageFile1) form.append("ImageFile1", files.imageFile1);
+    if (files.imageFile2) form.append("ImageFile2", files.imageFile2);
+    if (files.imageFile3) form.append("ImageFile3", files.imageFile3);
+    if (files.imageFile4) form.append("ImageFile4", files.imageFile4);
 
     fetch(`http://localhost:5275/api/Bike/${id}`, {
       method: "PUT",
-      headers: { "Content-Type": "application/json", ...authHeaders },
-      body: JSON.stringify(payload),
+      headers: { ...authHeaders }, // FormData auto sets Content-Type
+      body: form,
     })
       .then((res) => {
         if (res.ok) {
@@ -100,7 +125,17 @@ function EditBike() {
       <form onSubmit={handleSubmit} className="row g-4">
         {/* Brand Dropdown */}
         <div className="col-md-6">
-          <label className="form-label">Brand</label>
+          <div className="d-flex justify-content-between align-items-center mb-2">
+            <label className="form-label mb-0">Brand</label>
+            <button
+              type="button"
+              className="btn btn-outline-primary btn-sm"
+              onClick={() => navigate("/brand-management")}
+              title="Manage Brands"
+            >
+              <i className="fas fa-tags me-1"></i>Manage Brands
+            </button>
+          </div>
           <select
             name="brandId"
             className="form-select"
@@ -140,17 +175,24 @@ function EditBike() {
           </div>
         ))}
 
-        {/* Image fields */}
+        {/* Image file inputs + preview */}
         {[1, 2, 3, 4].map((n) => (
           <div key={n} className="col-md-6">
-            <label className="form-label">{`Image URL ${n}`}</label>
+            <label className="form-label">{`Image ${n}`}</label>
             <input
-              type="text"
-              name={`imageUrl${n}`}
+              type="file"
+              accept="image/*"
               className="form-control"
-              value={formData[`imageUrl${n}`] || ""}
-              onChange={handleChange}
+              onChange={(e) => handleFileChange(e, `imageFile${n}`)}
             />
+            {previews[`imageFile${n}`] && (
+              <img
+                src={previews[`imageFile${n}`]}
+                alt={`Preview ${n}`}
+                className="img-thumbnail mt-2"
+                style={{ maxHeight: "150px" }}
+              />
+            )}
           </div>
         ))}
 

@@ -249,18 +249,26 @@ function Product() {
               data-aos="fade-up"
               data-aos-delay={index * 100}
             >
-              <div className="bike-card">
-                <div className="bike-image">
+              <div className="bike-card" style={{ borderRadius: "16px", boxShadow: "0 6px 18px rgba(0,0,0,0.08)", overflow: "hidden", background: "#fff" }}>
+                <div className="bike-image position-relative" style={{ height: "320px", backgroundColor: "#f8f9fa", display: "flex", alignItems: "center", justifyContent: "center", overflow: "hidden" }}>
                   <img
-                    src={
-                      bike.imageUrl1 ||
-                      bike.imageUrl ||
-                      bike.image ||
-                      "https://via.placeholder.com/400x220?text=No+Image"
-                    }
-                    alt={bike.bikeName || bike.name || bike.title}
+                    src={bike.imageUrl1 ? `http://localhost:5275/${bike.imageUrl1}` : '/placeholder-bike.jpg'}
+                    alt={bike?.bikeName || "Bike"}
+                    className="img-fluid rounded"
+                    style={{ 
+                      height: "100%", 
+                      objectFit: "contain", 
+                      width: "auto",
+                      backgroundColor: "transparent",
+                      display: "block"
+                    }}
+                    loading="lazy"
+                    onError={(e) => {
+                      e.target.src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzAwIiBoZWlnaHQ9IjIwMCIgdmlld0JveD0iMCAwIDMwMCAyMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIzMDAiIGhlaWdodD0iMjAwIiBmaWxsPSIjRjhGOUZBIi8+CjxwYXRoIGQ9Ik0xMjUgNzVIMTc1VjEyNUgxMjVWNzVaIiBmaWxsPSIjREREREREIi8+CjxwYXRoIGQ9Ik0xMzUgODVIMTY1VjExNUgxMzVWODVaIiBmaWxsPSIjQ0NDQ0NDIi8+CjxjaXJjbGUgY3g9IjE0NSIgY3k9IjEwNSIgcj0iNSIgZmlsbD0iI0ZGRkZGRiIvPgo8dGV4dCB4PSIxNTAiIHk9IjE1MCIgZmlsbD0iIzk5OTk5OSIgZm9udC1mYW1pbHk9IkFyaWFsLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjE0IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj5CSUtFIE1BR0U8L3RleHQ+Cjwvc3ZnPgo=';
+                    }}
                   />
                 </div>
+
                 <div className="bike-details">
                   <h3 className="bike-title">
                     {bike.bikeName || bike.name || bike.title}

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 function BookingManagement() {
     const [bookings, setBookings] = useState([]);
@@ -7,14 +8,14 @@ function BookingManagement() {
     const [pageNumber, setPageNumber] = useState(1);
     const [totalPages, setTotalPages] = useState(1);
 
+    const navigate = useNavigate();
+
     const fetchBookings = async () => {
         try {
             setLoading(true);
             const res = await axios.get(
                 `http://localhost:5275/api/Booking/BookingDetails?pageNumber=${pageNumber}&pageSize=3`
             );
-
-            // ✅ use correct JSON keys (camelCase)
             setBookings(res.data.data || []);
             setTotalPages(res.data.totalPages || 1);
         } catch (err) {
@@ -45,10 +46,6 @@ function BookingManagement() {
                             {bookings.map((b, i) => (
                                 <div className="col-md-4 mb-4" key={b.bookingId ?? i}>
                                     <div className="card border-0 shadow-lg h-100 rounded-4 overflow-hidden">
-
-                                     
-
-                                        {/* ✅ Image */}
                                         {b.adharcardPhoto && (
                                             <div className="position-relative">
                                                 <img
@@ -57,23 +54,17 @@ function BookingManagement() {
                                                     className="img-fluid w-100"
                                                     style={{ maxHeight: "180px", objectFit: "cover" }}
                                                 />
-                                                {/* Bike name badge */}
                                                 <span className="badge bg-light text-dark position-absolute top-0 end-0 m-2 shadow-sm">
                                                     {b.bikeName}
                                                 </span>
                                             </div>
                                         )}
 
-                                        {/* ✅ Card Details */}
                                         <div className="card-body">
                                             <p className="mb-2"><strong>Customer:</strong> {b.username}</p>
-                                            <p className="mb-2"><strong>Aadhar No:</strong> {b.aadharCardNumber}</p>
-                                            <p className="mb-2"><strong>Phone:</strong> {b.userPhoneNumber}</p>
-                                             <p className="mb-2"><strong>Bike Name:</strong> {b.bikeName}</p>
-                                            <p className="mb-2"><strong>Date:</strong> {new Date(b.bookingDate).toLocaleString()}</p>
-                                            <p className="mb-3"><strong>Modified:</strong> {new Date(b.modifiedAt).toLocaleString()}</p>
+                                            <p className="mb-2"><strong>Bike:</strong> {b.bikeName}</p>
+                                            <p className="mb-2"><strong>Date:</strong> {new Date(b.bookingDate).toLocaleDateString()}</p>
 
-                                            {/* Status Badge */}
                                             <span
                                                 className={`badge px-3 py-2 rounded-pill ${b.status === "Approved"
                                                         ? "bg-success"
@@ -86,13 +77,12 @@ function BookingManagement() {
                                             </span>
                                         </div>
 
-                                        {/* ✅ Footer Buttons */}
-                                        <div className="card-footer bg-light border-0 d-flex justify-content-between">
-                                            <button className="btn btn-success btn-sm rounded-pill shadow-sm w-50 me-2">
-                                                Accept
-                                            </button>
-                                            <button className="btn btn-danger btn-sm rounded-pill shadow-sm w-50 ms-2">
-                                                Decline
+                                        <div className="card-footer bg-light border-0 d-flex flex-column">
+                                            <button
+                                                className="btn btn-outline-primary btn-sm mb-2 rounded-pill shadow-sm"
+                                                onClick={() => navigate(`/booking/${b.bookingId}`)} // ✅ must match your API key
+                                            >
+                                                View More
                                             </button>
                                         </div>
                                     </div>
@@ -102,43 +92,24 @@ function BookingManagement() {
                     )}
                 </div>
 
-
-
-
-
-
                 {/* Pagination */}
                 <div className="d-flex justify-content-center mt-3">
                     <nav>
                         <ul className="pagination">
                             <li className={`page-item ${pageNumber === 1 ? "disabled" : ""}`}>
-                                <button
-                                    className="page-link"
-                                    onClick={() => setPageNumber((p) => p - 1)}
-                                >
+                                <button className="page-link" onClick={() => setPageNumber((p) => p - 1)}>
                                     Previous
                                 </button>
                             </li>
                             {Array.from({ length: totalPages }, (_, i) => (
-                                <li
-                                    key={i}
-                                    className={`page-item ${pageNumber === i + 1 ? "active" : ""}`}
-                                >
-                                    <button
-                                        className="page-link"
-                                        onClick={() => setPageNumber(i + 1)}
-                                    >
+                                <li key={i} className={`page-item ${pageNumber === i + 1 ? "active" : ""}`}>
+                                    <button className="page-link" onClick={() => setPageNumber(i + 1)}>
                                         {i + 1}
                                     </button>
                                 </li>
                             ))}
-                            <li
-                                className={`page-item ${pageNumber === totalPages ? "disabled" : ""}`}
-                            >
-                                <button
-                                    className="page-link"
-                                    onClick={() => setPageNumber((p) => p + 1)}
-                                >
+                            <li className={`page-item ${pageNumber === totalPages ? "disabled" : ""}`}>
+                                <button className="page-link" onClick={() => setPageNumber((p) => p + 1)}>
                                     Next
                                 </button>
                             </li>
@@ -147,8 +118,6 @@ function BookingManagement() {
                 </div>
             </div>
         </div>
-
-
     );
 }
 

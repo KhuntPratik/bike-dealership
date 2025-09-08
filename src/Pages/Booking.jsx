@@ -1,23 +1,27 @@
 import React, { useState, useEffect } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
+import { QRCodeCanvas } from "qrcode.react";
 
 function BookingPage() {
   const location = useLocation();
-  const { bikeId } = location.state || {};
+  const { bikeId } = location.state || {}; // ✅ bikeId from product page
+  const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
-  UserId: "",
-  BikeId: bikeId || "",
-  AadharNumber: "",
-  BookingDate: new Date().toISOString().slice(0, 10),
-});
-const [bikeName, setBikeName] = useState(""); // separate state
+    UserId: "",
+    BikeId: bikeId || "",
+    AadharNumber: "",
+    BookingDate: new Date().toISOString().slice(0, 10),
+    Amount: 5000, // fixed
+    PaymentMethod: "Online", // fixed
+    UTRNumber: "",
+  });
 
-
+  const [bikeName, setBikeName] = useState("");
   const [AadharCard, setAadharCard] = useState(null);
+  const [PaymentSS, setPaymentSS] = useState(null);
 
-
-  // Load user info
+  // ✅ Get logged in user from localStorage
   useEffect(() => {
     const storedUser = localStorage.getItem("user");
     if (storedUser) {
@@ -29,13 +33,17 @@ const [bikeName, setBikeName] = useState(""); // separate state
     }
   }, []);
 
-  // Fetch bike name from API
+  // ✅ Fetch bike name
   useEffect(() => {
     if (bikeId) {
       fetch(`http://localhost:5275/api/Bike/${bikeId}`)
         .then((res) => res.json())
         .then((data) => {
-          setBikeName(data.name); // adjust 'name' based on your API response
+          setBikeName(data.bikeName || data.name || "");
+          setFormData((prev) => ({
+            ...prev,
+            BikeId: data.bikeId || bikeId,
+          }));
         })
         .catch((err) => console.error("Error fetching bike:", err));
     }
@@ -55,130 +63,182 @@ const [bikeName, setBikeName] = useState(""); // separate state
     }
   };
 
-const handleSubmit = async (e) => {
-  e.preventDefault();
-  const data = new FormData();
-  data.append("UserId", formData.UserId);
-  data.append("BikeId", formData.BikeId);
-  data.append("BikeName", bikeName); // ✅ include bikeName here
-  data.append("AadharNumber", formData.AadharNumber);
-  data.append("BookingDate", formData.BookingDate);
-  if (AadharCard) data.append("AadharCard", AadharCard);
-
-  try {
-    const res = await fetch("http://localhost:5275/api/Booking/Image", {
-      method: "POST",
-      body: data,
-    });
-
-    if (res.ok) {
-      const result = await res.json();
-      alert("✅ " + result.Message);
-    } else {
-      const error = await res.json();
-      alert("❌ " + error.Message);
+  const handlePaymentFileChange = (e) => {
+    if (e.target.files && e.target.files[0]) {
+      setPaymentSS(e.target.files[0]);
     }
-  } catch (error) {
-    console.error("Error:", error);
-    alert("⚠️ Error submitting booking");
-  }
-};
+  };
 
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    const bookingData = new FormData();
+    bookingData.append("UserId", Number(formData.UserId));
+    bookingData.append("BikeId", Number(formData.BikeId));
+    bookingData.append("AadharNumber", formData.AadharNumber);
+    bookingData.append("BookingDate", formData.BookingDate);
+    bookingData.append("Amount", formData.Amount);
+    bookingData.append("PaymentMethod", formData.PaymentMethod);
+    bookingData.append("UTRNumber", formData.UTRNumber);
+
+    if (AadharCard) bookingData.append("AadharCardFile", AadharCard);
+    if (PaymentSS) bookingData.append("PaymentSSfile", PaymentSS);
+
+    try {
+      const bookingRes = await fetch("http://localhost:5275/api/Booking/CreateBooking", {
+        method: "POST",
+        body: bookingData,
+      });
+
+      if (!bookingRes.ok) {
+        const error = await bookingRes.json();
+        alert("❌ Booking Failed: " + (error.message || "Something went wrong"));
+        return;
+      }
+
+      const bookingResult = await bookingRes.json();
+      alert("✅ Booking Completed Successfully");
+
+      // 👉 Redirect user to MyBookings with their userId
+      navigate(`/bookings/${formData.UserId}`);
+    } catch (error) {
+      console.error("Error:", error);
+      alert("⚠️ Error submitting booking");
+    }
+  };
+
+  // ✅ UPI QR Code
+  const upiId = "pratikkhunt43@okicici";
+  const qrValue = `upi://pay?pa=${upiId}&pn=Maa%20Bhagvati%20Auto%20Point&am=5000&cu=INR&tn=Bike%20Booking`;
 
   return (
-    <div className="container d-flex justify-content-center align-items-center bg-light mt-5">
-      <div className="card shadow-lg p-4" style={{ maxWidth: "600px", width: "100%" }}>
+    <div className="container bg-light mt-5">
+      <div className="card shadow-lg p-4">
         <h3 className="fw-bold mb-2 text-center">Complete Your Booking</h3>
         <p className="text-muted text-center mb-4">
-          Fill in your details to reserve this bike
+          Fill in your details to reserve this bike and pay online
         </p>
-        <p>{formData.BikeId}</p>
 
+        <form onSubmit={handleSubmit}>
+          <div className="row">
+            {/* LEFT SIDE - BOOKING */}
+            <div className="col-md-6 border-end">
+              <h5 className="mb-3">Booking Details</h5>
 
-        {/* Display Bike Name */}
-       {/* Display Bike Name */}
-{bikeName && (
-  <div className="mb-3">
-    <label className="form-label">Bike Name</label>
-    <input
-      type="text"
-      value={bikeName}
-      readOnly
-      className="form-control bg-light fw-bold"
-    />
-  </div>
-)}
+              <div className="mb-3">
+                <label className="form-label">User ID</label>
+                <input
+                  type="number"
+                  name="UserId"
+                  value={formData.UserId}
+                  onChange={handleChange}
+                  className="form-control"
+                  required
+                />
+              </div>
 
-        <form onSubmit={handleSubmit} className="needs-validation" noValidate>
-          <div className="mb-3">
-            <label className="form-label">User ID</label>
-            <input
-              type="number"
-              name="UserId"
-              value={formData.UserId}
-              readOnly
-              className="form-control bg-light"
-            />
-          </div>
+              <div className="mb-3">
+                <label className="form-label">Bike ID</label>
+                <input
+                  type="number"
+                  name="BikeId"
+                  value={formData.BikeId}
+                  onChange={handleChange}
+                  className="form-control"
+                  required
+                />
+              </div>
 
+              <div className="mb-3">
+                <label className="form-label">Bike Name</label>
+                <input
+                  type="text"
+                  value={bikeName}
+                  readOnly
+                  className="form-control bg-light fw-bold"
+                />
+              </div>
 
+              <div className="mb-3">
+                <label className="form-label">Booking Date</label>
+                <input
+                  type="date"
+                  name="BookingDate"
+                  value={formData.BookingDate}
+                  onChange={handleChange}
+                  className="form-control"
+                  required
+                />
+              </div>
 
-          <div className="mb-3">
-            <label className="form-label">Booking Date</label>
-            <input
-              type="date"
-              name="BookingDate"
-              value={formData.BookingDate}
-              onChange={handleChange}
-              className="form-control"
-              required
-            />
-          </div>
+              <div className="mb-3">
+                <label className="form-label">Aadhar Number</label>
+                <input
+                  type="text"
+                  name="AadharNumber"
+                  value={formData.AadharNumber}
+                  onChange={handleChange}
+                  className="form-control"
+                  required
+                />
+              </div>
 
-          <div className="mb-3">
-            <label className="form-label">Aadhar Number</label>
-            <input
-              type="text"
-              name="AadharNumber"
-              placeholder="Enter 12-digit Aadhar number"
-              value={formData.AadharNumber}
-              onChange={handleChange}
-              className="form-control"
-              required
-            />
-          </div>
+              <div className="mb-4">
+                <label className="form-label">Aadhar Card Upload</label>
+                <input
+                  type="file"
+                  accept="image/*"
+                  className="form-control"
+                  onChange={handleFileChange}
+                />
+              </div>
+            </div>
 
-          <div className="mb-4">
-            <label className="form-label">Aadhar Card Upload</label>
-            <div
-              className="border border-2 border-secondary rounded-3 p-4 text-center bg-light"
-              style={{ cursor: "pointer" }}
-              onClick={() => document.getElementById("file-upload").click()}
-            >
-              <i className="bi bi-cloud-arrow-up fs-1 text-secondary"></i>
-              <p className="mt-2 text-muted">
-                <span className="text-primary fw-bold">Click to upload</span> or drag and drop
-              </p>
-              <p className="small text-muted">PNG, JPG up to 10MB</p>
-              {AadharCard && <p className="text-success fw-bold">{AadharCard.name}</p>}
-              <input
-                id="file-upload"
-                type="file"
-                accept="image/*"
-                className="d-none"
-                onChange={handleFileChange}
-              />
+            {/* RIGHT SIDE - PAYMENT */}
+            <div className="col-md-6">
+              <h5 className="mb-3">Payment Details</h5>
+
+              <div className="mb-3 text-center">
+                <p className="fw-bold mb-2">Scan & Pay ₹5000 via UPI</p>
+                <QRCodeCanvas value={qrValue} size={200} />
+                <p className="text-muted small mt-2">{upiId}</p>
+              </div>
+
+              <div className="mb-3">
+                <label className="form-label">UTR Number</label>
+                <input
+                  type="text"
+                  name="UTRNumber"
+                  value={formData.UTRNumber}
+                  onChange={handleChange}
+                  className="form-control"
+                  required
+                />
+              </div>
+
+              <div className="mb-3">
+                <label className="form-label">Payment Screenshot</label>
+                <input
+                  type="file"
+                  accept="image/*"
+                  className="form-control"
+                  onChange={handlePaymentFileChange}
+                />
+              </div>
             </div>
           </div>
 
-          <button type="submit" className="btn btn-success w-100 py-2 fw-semibold">
-            Confirm Booking
+
+
+          <button
+            type="submit"
+            className="btn btn-success w-100 mt-4 py-2 fw-semibold"
+          >
+            Confirm Booking & Pay ₹5000
           </button>
         </form>
       </div>
     </div>
-
-
   );
 }
 
