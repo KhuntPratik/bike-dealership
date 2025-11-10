@@ -10,6 +10,7 @@
     width: 100vw;
     overflow-x: hidden;
     font-family: 'Segoe UI', sans-serif;
+    background-color: #f7f9fc;
   }
   
   /* Navbar Styling */
@@ -2297,3 +2298,68 @@
     }
   }
 
+
+
+
+
+  .wishlist-btn:hover i {
+  transform: scale(1.15);
+  transition: all 0.2s ease-in-out;
+}
+
+
+
+
+.wishlist-card {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.wishlist-card {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid #e0e0e0 !important;
+}
+
+.wishlist-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 5px 15px rgba(220, 53, 69, 0.1) !important;
+  border-color: #dc3545 !important;
+}
+
+.wishlist-card .card-img-top img:hover {
+  transform: scale(1.03);
+}
+
+.badge {
+  font-size: 0.7rem;
+  padding: 0.35em 0.65em;
+}
+
+.btn-sm {
+  padding: 0.375rem 0.75rem;
+  font-size: 0.875rem;
+}
+
+/* Red theme adjustments */
+.btn-danger {
+  background-color: #dc3545;
+  border-color: #dc3545;
+}
+
+.btn-danger:hover {
+  background-color: #bb2d3b;
+  border-color: #b02a37;
+}
+
+.btn-outline-danger {
+  color: #dc3545;
+  border-color: #dc3545;
+}
+
+.btn-outline-danger:hover {
+  background-color: #dc3545;
+  border-color: #dc3545;
+}

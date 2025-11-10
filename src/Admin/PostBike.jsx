@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../context/AuthContext";
+import { Alert, Snackbar } from "@mui/material";
 
 function AddBikeForm() {
   const { getToken, isAdmin, getRole, getUserInfo } = useContext(AuthContext);
@@ -27,9 +28,14 @@ function AddBikeForm() {
 
   const [previews, setPreviews] = useState({});
 
+
+  const [alertOpen, setAlertOpen] = useState(false);
+  const [alertMessage, setAlertMessage] = useState("");
+  const [alertSeverity, setAlertSeverity] = useState("success");
+
   // Load brands
   useEffect(() => {
-    fetch("http://localhost:5275/api/Bike/BradnDropdown", {
+    fetch("http://localhost:5275/api/Brand", {
       headers: { ...authHeaders },
     })
       .then((res) => {
@@ -61,54 +67,63 @@ function AddBikeForm() {
     }
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
+ const handleSubmit = (e) => {
+  e.preventDefault();
 
-    if (!isAdmin || !isAdmin()) {
-      const role = getRole ? getRole() : "Unknown";
-      alert(`Forbidden: Only Admins can post bikes. Current role: ${role || "N/A"}`);
-      return;
+  if (!isAdmin || !isAdmin()) {
+    const role = getRole ? getRole() : "Unknown";
+    setAlertSeverity("error");
+    setAlertMessage(`❌ Forbidden: Only Admins can post bikes. Current role: ${role || "N/A"}`);
+    setAlertOpen(true);
+    return;
+  }
+
+  const info = getUserInfo ? getUserInfo() : {};
+  const derivedDealerId =
+    info?.dealerId || info?.DealerId || info?.dealerID || info?.dealer_id || undefined;
+
+  const form = new FormData();
+  form.append("BrandId", formData.brandId);
+  form.append("BikeNumber", formData.bikeNumber);
+  form.append("BikeName", formData.bike || "");
+  form.append("Model", formData.model);
+  form.append("Km", formData.km);
+  form.append("Owner", formData.owner);
+  form.append("Price", formData.price);
+  form.append("Color", formData.color);
+
+  if (derivedDealerId) form.append("DealerId", derivedDealerId);
+
+  [1, 2, 3, 4].forEach((n) => {
+    if (formData[`imageFile${n}`]) {
+      form.append(`ImageFile${n}`, formData[`imageFile${n}`]);
     }
+  });
 
-    const info = getUserInfo ? getUserInfo() : {};
-    const derivedDealerId =
-      info?.dealerId || info?.DealerId || info?.dealerID || info?.dealer_id || undefined;
-
-    const form = new FormData();
-    form.append("BrandId", formData.brandId);
-    form.append("BikeNumber", formData.bikeNumber);
-    form.append("BikeName", formData.bike || "");
-    form.append("Model", formData.model);
-    form.append("Km", formData.km);
-    form.append("Owner", formData.owner);
-    form.append("Price", formData.price);
-    form.append("Color", formData.color);
-
-    if (derivedDealerId) {
-      form.append("DealerId", derivedDealerId);
-    }
-
-    [1, 2, 3, 4].forEach((n) => {
-      if (formData[`imageFile${n}`]) {
-        form.append(`ImageFile${n}`, formData[`imageFile${n}`]);
-      }
-    });
-
-    fetch("http://localhost:5275/api/Bike", {
-      method: "POST",
-      headers: { ...authHeaders }, // do not set Content-Type manually
-      body: form,
-    })
-      .then((res) => {
-        if (res.status === 401) throw new Error("Unauthorized: Your session has expired.");
-        if (res.status === 403) return res.text().then((t) => {
+  fetch("http://localhost:5275/api/Bike/InsertBike", {
+    method: "POST",
+    headers: { ...authHeaders }, // don't set Content-Type manually for FormData
+    body: form,
+  })
+    .then((res) => {
+      if (res.status === 401) throw new Error("Unauthorized: Your session has expired.");
+      if (res.status === 403)
+        return res.text().then((t) => {
           throw new Error(t || "You do not have permission to add a bike.");
         });
-        if (!res.ok) return res.text().then((t) => { throw new Error(t || "Failed to add bike."); });
-        return res.json();
-      })
-      .then(() => {
-        alert("✅ Bike added successfully!");
+      if (!res.ok)
+        return res.text().then((t) => {
+          throw new Error(t || "Failed to add bike.");
+        });
+      return res.json();
+    })
+    .then(() => {
+      setAlertSeverity("success");
+      setAlertMessage("✅ Bike added successfully!");
+      setAlertOpen(true);
+
+      // Reset form after short delay
+      setTimeout(() => {
         setFormData({
           brandId: "",
           bikeNumber: "",
@@ -125,12 +140,16 @@ function AddBikeForm() {
         });
         setPreviews({});
         navigate("/admin");
-      })
-      .catch((err) => {
-        console.error("Error:", err);
-        alert(`❌ ${err.message || "Failed to add bike."}`);
-      });
-  };
+      }, 1500);
+    })
+    .catch((err) => {
+      console.error("Error:", err);
+      setAlertSeverity("error");
+      setAlertMessage(`❌ ${err.message || "Failed to add bike."}`);
+      setAlertOpen(true);
+    });
+};
+
 
   return (
     <div className="container mt-5">
@@ -141,14 +160,6 @@ function AddBikeForm() {
         <div className="col-md-6">
           <div className="d-flex justify-content-between align-items-center mb-2">
             <label className="form-label mb-0">Brand</label>
-            <button
-              type="button"
-              className="btn btn-outline-primary btn-sm"
-              onClick={() => navigate("/brand-management")}
-              title="Manage Brands"
-            >
-              <i className="fas fa-tags me-1"></i>Manage Brands
-            </button>
           </div>
           <select
             name="brandId"
@@ -285,6 +296,21 @@ function AddBikeForm() {
           </div>
         ))}
 
+        <Snackbar
+          open={alertOpen}
+          autoHideDuration={4000}
+          onClose={() => setAlertOpen(false)}
+          anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+        >
+          <Alert
+            onClose={() => setAlertOpen(false)}
+            severity={alertSeverity}
+            variant="filled"
+            sx={{ width: "100%" }}
+          >
+            {alertMessage}
+          </Alert>
+        </Snackbar>
         {/* Submit Button */}
         <div className="col-12 mt-4">
           <button type="submit" className="btn btn-success w-100 mb-5">
@@ -292,7 +318,25 @@ function AddBikeForm() {
           </button>
         </div>
       </form>
+
+      <Snackbar
+  open={alertOpen}
+  autoHideDuration={4000}
+  onClose={() => setAlertOpen(false)}
+  anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+>
+  <Alert
+    onClose={() => setAlertOpen(false)}
+    severity={alertSeverity}
+    variant="filled"
+    sx={{ width: "100%" }}
+  >
+    {alertMessage}
+  </Alert>
+</Snackbar>
+
     </div>
+
   );
 }
 

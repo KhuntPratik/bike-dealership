@@ -4,7 +4,6 @@ import { AuthContext } from "../context/AuthContext";
 import AOS from "aos";
 import "aos/dist/aos.css";
 import "../all.css";
-import { Alert, Snackbar } from "@mui/material";
 
 function BrandManagement() {
   const navigate = useNavigate();
@@ -14,11 +13,6 @@ function BrandManagement() {
 
   const [brands, setBrands] = useState([]);
   const [loading, setLoading] = useState(false);
-
-  const [alertOpen, setAlertOpen] = useState(false);
-  const [alertMessage, setAlertMessage] = useState("");
-  const [alertSeverity, setAlertSeverity] = useState("success");
-
 
   useEffect(() => {
     if (!isAdmin || !isAdmin()) {
@@ -54,6 +48,7 @@ function BrandManagement() {
     fetchBrands();
   }, []);
 
+  // ✅ Handle Delete Brand
   const handleDelete = async (brand) => {
     if (
       !window.confirm(
@@ -74,9 +69,7 @@ function BrandManagement() {
         throw new Error("Cannot delete brand: It is being used by existing bikes.");
 
       if (response.ok) {
-        setAlertSeverity("success");
-        setAlertMessage(`✅ Brand "${brand.brandName}" deleted successfully!`);
-        setAlertOpen(true);
+        alert("✅ Brand deleted successfully!");
         fetchBrands();
       } else {
         const errorText = await response.text();
@@ -84,27 +77,12 @@ function BrandManagement() {
       }
     } catch (error) {
       console.error("Delete error:", error);
-      setAlertSeverity("error");
-      setAlertMessage(`❌ ${error.message}`);
-      setAlertOpen(true);
+      alert(`❌ ${error.message}`);
     }
   };
 
-
   return (
     <div className="container-fluid mt-5">
-      {/* Header and Add Brand Button */}
-      <div className="d-flex justify-content-between align-items-center mb-4">
-        <h3 className="fw-bold">Brand Management</h3>
-        <button
-          className="btn btn-primary rounded-pill px-4 shadow-sm mt-5"
-          onClick={() => navigate("/add-brand")}
-        >
-          <i className="fas fa-plus me-2"></i>Add Brand
-        </button>
-      </div>
-
-      {/* Brands Grid */}
       <div className="row">
         <div className="col-12">
           {loading ? (
@@ -112,7 +90,7 @@ function BrandManagement() {
           ) : brands.length === 0 ? (
             <p className="text-center">No brands found</p>
           ) : (
-            <div className="row g-4 mt-3">
+            <div className="row g-4 mt-5">
               {brands.map((brand, index) => (
                 <div
                   key={brand.brandId}
@@ -120,8 +98,7 @@ function BrandManagement() {
                   data-aos="fade-up"
                   data-aos-delay={index * 100}
                 >
-                  <div className="brand-card h-100 shadow-sm border-0 rounded-4 overflow-hidden">
-                    {/* Image */}
+                  <div className="brand-card h-100">
                     <div className="brand-image-container text-center" style={{ height: "200px" }}>
                       <img
                         src={`http://localhost:5275/${brand.brandImage}`}
@@ -131,7 +108,6 @@ function BrandManagement() {
                       />
                     </div>
 
-                    {/* Content */}
                     <div className="brand-content p-4">
                       <h4 className="brand-name fw-bold mb-2">{brand.brandName}</h4>
                       <div className="d-flex gap-2">
@@ -142,6 +118,7 @@ function BrandManagement() {
                           <i className="fas fa-edit me-1"></i>Edit
                         </button>
 
+                        {/* ✅ Fixed Delete Button */}
                         <button
                           className="btn btn-outline-danger flex-fill"
                           onClick={() => handleDelete(brand)}
@@ -157,22 +134,6 @@ function BrandManagement() {
           )}
         </div>
       </div>
-      <Snackbar
-        open={alertOpen}
-        autoHideDuration={4000}
-        onClose={() => setAlertOpen(false)}
-        anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
-      >
-        <Alert
-          onClose={() => setAlertOpen(false)}
-          severity={alertSeverity}
-          variant="filled"
-          sx={{ width: "100%" }}
-        >
-          {alertMessage}
-        </Alert>
-      </Snackbar>
-
     </div>
   );
 }

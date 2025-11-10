@@ -8,26 +8,77 @@ function HeroSection() {
     const navigate = useNavigate();
     const url = "http://localhost:5275/api/Brand";
     const [data, setData] = useState([]);
+    const [contactForm, setContactForm] = useState({
+        name: "",
+        number: "",
+        subject: "",
+        email: "",
+        message: "",
+    });
+    const [formSubmitted, setFormSubmitted] = useState(false);
+    const [status, setStatus] = useState("");
 
-   useEffect(() => {
-    const fetchData = async () => {
+
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+        setContactForm({ ...contactForm, [name]: value });
+    };
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        console.log("📤 Sending data to Google Sheets:", contactForm);
+
         try {
-            const res = await fetch(url);
-            const json = await res.json();
-            console.log("Fetched Data:", json); // ✅ check console
-            setData(json);
+            await fetch(
+                "https://script.google.com/macros/s/AKfycbwC28OzGsJLP_28ZZPRhxHIgYRfYi3mIhy9v-NcvMYzSzAkIRQdzIfzGrwKy4zc4oyW/exec",
+                {
+                    method: "POST",
+                    mode: "no-cors",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(contactForm),
+                }
+            );
+
+            console.log("✅ Data sent successfully to Google Sheets!");
+            setStatus("✅ Message sent successfully!");
+            setFormSubmitted(true);
+
+            // Reset form
+            setContactForm({
+                name: "",
+                number: "",
+                subject: "",
+                email: "",
+                message: "",
+            });
+
+            // Hide message after 3 seconds
+            setTimeout(() => setFormSubmitted(false), 3000);
         } catch (error) {
-            console.error("Error fetching brand data:", error);
+            console.error("❌ Error sending data:", error);
+            setStatus("❌ Failed to send message. Try again!");
         }
     };
 
-    fetchData();
-}, []);
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const res = await fetch(url);
+                const json = await res.json();
+                console.log("Fetched Data:", json); // ✅ check console
+                setData(json);
+            } catch (error) {
+                console.error("Error fetching brand data:", error);
+            }
+        };
+
+        fetchData();
+    }, []);
 
     return (
         <>
-        
-            <section className="hero-section-new text-center">
+
+            <section className="hero-section-new text-center mt-5">
                 <div className="hero-bg-pattern"></div>
                 <div className="container position-relative">
                     <div className="row align-items-center min-vh-100">
@@ -43,7 +94,7 @@ function HeroSection() {
                                     <span className="text-gradient"> Bike Starts Here</span>
                                 </h1>
                                 <p className="hero-subtitle-new lead mb-4">
-                                    Discover quality used bikes at unbeatable prices. 
+                                    Discover quality used bikes at unbeatable prices.
                                     We make buying and selling bikes simple, secure, and satisfying.
                                 </p>
                                 <div className="hero-stats mb-5">
@@ -81,8 +132,8 @@ function HeroSection() {
                         <div className="col-lg-6">
                             <div className="hero-image-container">
                                 <div className="hero-image">
-                                    <img 
-                                        src="https://imgs.search.brave.com/4Oa2_2MMxmnlfoDIfiyO0JV8CJleSh4Xsy6HQZI-TmI/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9tZWRp/YS5pc3RvY2twaG90/by5jb20vaWQvMTA2/MTE4NzI2Mi9waG90/by9wb3J0cmFpdC1v/Zi1jdXN0b21lci1j/aG9vc2luZy1uZXct/bW90b3JiaWtlLWlu/LXdvcmtzaG9wLmpw/Zz9zPTYxMng2MTIm/dz0wJms9MjAmYz1L/bjFYdC1jTFFFdkk5/ZFFSZHl3cEUtaXZP/Z1E1WndfVXhUTlha/NWlsVUxRPQ" 
+                                    <img
+                                        src="https://imgs.search.brave.com/4Oa2_2MMxmnlfoDIfiyO0JV8CJleSh4Xsy6HQZI-TmI/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9tZWRp/YS5pc3RvY2twaG90/by5jb20vaWQvMTA2/MTE4NzI2Mi9waG90/by9wb3J0cmFpdC1v/Zi1jdXN0b21lci1j/aG9vc2luZy1uZXct/bW90b3JiaWtlLWlu/LXdvcmtzaG9wLmpw/Zz9zPTYxMng2MTIm/dz0wJms9MjAmYz1L/bjFYdC1jTFFFdkk5/ZFFSZHl3cEUtaXZP/Z1E1WndfVXhUTlha/NWlsVUxRPQ"
                                         alt="Motorcycle Workshop"
                                         className="img-fluid rounded-4 shadow-lg"
                                     />
@@ -114,7 +165,7 @@ function HeroSection() {
                                 <li className="mb-3"><i className="fas fa-smile text-primary me-2"></i>100% customer satisfaction</li>
                             </ul>
                         </div>
-                        
+
                         <div className="col-md-6">
                             <img
                                 src="https://imgs.search.brave.com/4Oa2_2MMxmnlfoDIfiyO0JV8CJleSh4Xsy6HQZI-TmI/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9tZWRp/YS5pc3RvY2twaG90/by5jb20vaWQvMTA2/MTE4NzI2Mi9waG90/by9wb3J0cmFpdC1v/Zi1jdXN0b21lci1j/aG9vc2luZy1uZXct/bW90b3JiaWtlLWlu/LXdvcmtzaG9wLmpw/Zz9zPTYxMng2MTIm/dz0wJms9MjAmYz1L/bjFYdC1jTFFFdkk5/ZFFSZHl3cEUtaXZP/Z1E1WndfVXhUTlha/NWlsVUxRPQ"
@@ -134,19 +185,20 @@ function HeroSection() {
                         <h2 className="section-title fw-bold">Popular Bike Brands</h2>
                         <p className="lead text-muted">Choose from top brands for quality and reliability</p>
                     </div>
-                    
+
                     <div className="row g-4 justify-content-center">
                         {data?.length > 0 ? (
                             data?.map((brand, index) => (
                                 <div className="col-6 col-sm-4 col-md-3 col-lg-2" key={index}>
-                                    <div 
+                                    <div
                                         className="brand-card text-center p-3 h-100"
                                         onClick={() => navigate(`/product?brandId=${brand.brandId}`)}
                                         style={{ cursor: 'pointer' }}
                                     >
                                         <div className="brand-image-container mb-3">
                                             <img
-                                                src={brand?.brandImage}
+
+                                                src={`http://localhost:5275/${brand.brandImage}`}
                                                 className="brand-image"
                                                 alt={brand?.brandName}
                                             />
@@ -255,13 +307,13 @@ function HeroSection() {
                                 <h2 className="contact-title">Get In Touch</h2>
                                 <p className="contact-subtitle">Ready to find your perfect bike? Contact us today!</p>
                             </div>
-                            
+
                             <div className="row g-5">
                                 {/* Contact Information */}
                                 <div className="col-lg-4">
                                     <div className="contact-info">
                                         <h4 className="info-title mb-4">Contact Information</h4>
-                                        
+
                                         <div className="info-item mb-4">
                                             <div className="info-icon">
                                                 <i className="fas fa-map-marker-alt"></i>
@@ -271,7 +323,7 @@ function HeroSection() {
                                                 <p>123 Bike Street, Motorcycle City<br />MC 12345, India</p>
                                             </div>
                                         </div>
-                                        
+
                                         <div className="info-item mb-4">
                                             <div className="info-icon">
                                                 <i className="fas fa-phone"></i>
@@ -281,7 +333,7 @@ function HeroSection() {
                                                 <p>+91 98765 43210<br />+91 98765 43211</p>
                                             </div>
                                         </div>
-                                        
+
                                         <div className="info-item mb-4">
                                             <div className="info-icon">
                                                 <i className="fas fa-envelope"></i>
@@ -291,7 +343,7 @@ function HeroSection() {
                                                 <p>info@maabhagwatibikes.com</p>
                                             </div>
                                         </div>
-                                        
+
                                         <div className="info-item">
                                             <div className="info-icon">
                                                 <i className="fas fa-clock"></i>
@@ -303,56 +355,76 @@ function HeroSection() {
                                         </div>
                                     </div>
                                 </div>
-                                
+
                                 {/* Contact Form */}
                                 <div className="col-lg-8">
                                     <div className="contact-form-container">
                                         <h4 className="form-title mb-4">Send us a Message</h4>
-                                        <form className="contact-form">
+                                        <form className="contact-form" onSubmit={handleSubmit}>
                                             <div className="row g-3">
                                                 <div className="col-md-6">
                                                     <div className="form-group">
                                                         <label className="form-label">
                                                             <i className="fas fa-user"></i> Full Name
                                                         </label>
-                                                        <input 
-                                                            type="text" 
-                                                            className="form-control" 
-                                                            placeholder="Enter your full name" 
+                                                        <input
+                                                            type="text"
+                                                            name="name"
+                                                            value={contactForm.name}
+                                                            onChange={handleChange}
+                                                            className="form-control"
+                                                            placeholder="Enter your full name"
+                                                            required
                                                         />
                                                     </div>
                                                 </div>
+
                                                 <div className="col-md-6">
                                                     <div className="form-group">
                                                         <label className="form-label">
                                                             <i className="fas fa-phone"></i> Phone Number
                                                         </label>
-                                                        <input 
-                                                            type="tel" 
-                                                            className="form-control" 
-                                                            placeholder="Enter your phone number" 
+                                                        <input
+                                                            type="tel"
+                                                            name="number"
+                                                            value={contactForm.number}
+                                                            onChange={handleChange}
+                                                            className="form-control"
+                                                            placeholder="Enter your phone number"
+                                                            required
                                                         />
                                                     </div>
                                                 </div>
+
                                                 <div className="col-12">
                                                     <div className="form-group">
                                                         <label className="form-label">
                                                             <i className="fas fa-envelope"></i> Email Address
                                                         </label>
-                                                        <input 
-                                                            type="email" 
-                                                            className="form-control" 
-                                                            placeholder="Enter your email address" 
+                                                        <input
+                                                            type="email"
+                                                            name="email"
+                                                            value={contactForm.email}
+                                                            onChange={handleChange}
+                                                            className="form-control"
+                                                            placeholder="Enter your email address"
+                                                            required
                                                         />
                                                     </div>
                                                 </div>
+
                                                 <div className="col-12">
                                                     <div className="form-group">
                                                         <label className="form-label">
                                                             <i className="fas fa-tag"></i> Subject
                                                         </label>
-                                                        <select className="form-control">
-                                                            <option>Select a subject</option>
+                                                        <select
+                                                            name="subject"
+                                                            value={contactForm.subject}
+                                                            onChange={handleChange}
+                                                            className="form-control"
+                                                        >
+                                                            <option value="">Select a subject</option>
                                                             <option>Buy a Bike</option>
                                                             <option>Sell a Bike</option>
                                                             <option>Bike Exchange</option>
@@ -361,23 +433,32 @@ function HeroSection() {
                                                         </select>
                                                     </div>
                                                 </div>
+
                                                 <div className="col-12">
                                                     <div className="form-group">
                                                         <label className="form-label">
                                                             <i className="fas fa-comment"></i> Message
                                                         </label>
-                                                        <textarea 
-                                                            className="form-control" 
-                                                            rows="5" 
+                                                        <textarea
+                                                            name="message"
+                                                            value={contactForm.message}
+                                                            onChange={handleChange}
+                                                            className="form-control"
+                                                            rows="5"
                                                             placeholder="Tell us how we can help you..."
                                                         ></textarea>
                                                     </div>
                                                 </div>
+
                                                 <div className="col-12">
                                                     <button type="submit" className="btn btn-contact">
                                                         <i className="fas fa-paper-plane me-2"></i>Send Message
                                                     </button>
                                                 </div>
+
+                                                {formSubmitted && (
+                                                    <p className="mt-3 text-success fw-bold">{status}</p>
+                                                )}
                                             </div>
                                         </form>
                                     </div>

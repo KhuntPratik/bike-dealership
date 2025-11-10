@@ -2,6 +2,7 @@
 import React, { useState, useEffect, useContext } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { AuthContext } from "../context/AuthContext";
+import { Alert, Snackbar } from "@mui/material";
 
 function EditBike() {
   const { id } = useParams();
@@ -11,6 +12,13 @@ function EditBike() {
   const token = getToken && getToken();
   const authHeaders = token ? { Authorization: `Bearer ${token}` } : {};
   const user = getUserInfo ? getUserInfo() : {};
+
+
+
+  const [alertOpen, setAlertOpen] = useState(false);
+  const [alertMessage, setAlertMessage] = useState("");
+  const [alertSeverity, setAlertSeverity] = useState("success");
+
 
   const [brands, setBrands] = useState([]);
   const [formData, setFormData] = useState({
@@ -43,7 +51,7 @@ function EditBike() {
 
   // Load bike data
   useEffect(() => {
-    fetch(`http://localhost:5275/api/Bike/${id}`, { headers: { ...authHeaders } })
+    fetch(`http://localhost:5275/api/Bike/GetById/${id}`, { headers: { ...authHeaders } })
       .then((res) => res.json())
       .then((data) => {
         setFormData(data);
@@ -92,21 +100,22 @@ function EditBike() {
     form.append("Price", formData.price);
     form.append("Color", formData.color);
 
-    // attach files if chosen
     if (files.imageFile1) form.append("ImageFile1", files.imageFile1);
     if (files.imageFile2) form.append("ImageFile2", files.imageFile2);
     if (files.imageFile3) form.append("ImageFile3", files.imageFile3);
     if (files.imageFile4) form.append("ImageFile4", files.imageFile4);
 
-    fetch(`http://localhost:5275/api/Bike/${id}`, {
+    fetch(`http://localhost:5275/api/Bike/BikeEdit/${id}`, {
       method: "PUT",
-      headers: { ...authHeaders }, // FormData auto sets Content-Type
+      headers: { ...authHeaders }, // don't manually set Content-Type
       body: form,
     })
       .then((res) => {
         if (res.ok) {
-          alert("✅ Bike updated successfully!");
-          navigate("/admin");
+          setAlertSeverity("success");
+          setAlertMessage("✅ Bike updated successfully!");
+          setAlertOpen(true);
+          setTimeout(() => navigate("/admin"), 1500); // navigate after a short delay
         } else {
           return res.text().then((msg) => {
             throw new Error(msg || "Failed to update bike.");
@@ -115,9 +124,12 @@ function EditBike() {
       })
       .catch((err) => {
         console.error("Update error:", err);
-        alert(`❌ ${err.message}`);
+        setAlertSeverity("error");
+        setAlertMessage(`❌ ${err.message}`);
+        setAlertOpen(true);
       });
   };
+
 
   return (
     <div className="container mt-5">
@@ -209,7 +221,24 @@ function EditBike() {
           </button>
         </div>
       </form>
+      <Snackbar
+        open={alertOpen}
+        autoHideDuration={4000}
+        onClose={() => setAlertOpen(false)}
+        anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+      >
+        <Alert
+          onClose={() => setAlertOpen(false)}
+          severity={alertSeverity}
+          variant="filled"
+          sx={{ width: "100%" }}
+        >
+          {alertMessage}
+        </Alert>
+      </Snackbar>
+
     </div>
+
   );
 }
 

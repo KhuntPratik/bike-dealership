@@ -108,10 +108,13 @@ export const AuthProvider = ({ children }) => {
         throw new Error("Role not found in token");
       }
 
+      // Normalize role to proper case
+      const normalizedRole = userRole.charAt(0).toUpperCase() + userRole.slice(1).toLowerCase();
       const validRoles = ["Customer", "Admin"];
-      if (!validRoles.includes(userRole)) {
+      if (!validRoles.includes(normalizedRole)) {
         throw new Error(`Invalid role: ${userRole}. Only Customer and Admin roles are supported.`);
       }
+      userRole = normalizedRole; // Use normalized version
 
       const userInfo = {
         username: extractUsername(payload) || "User",

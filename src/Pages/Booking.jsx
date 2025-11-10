@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { QRCodeCanvas } from "qrcode.react";
+import { Alert, Snackbar } from "@mui/material";
 
 function BookingPage() {
   const location = useLocation();
@@ -20,6 +21,11 @@ function BookingPage() {
   const [bikeName, setBikeName] = useState("");
   const [AadharCard, setAadharCard] = useState(null);
   const [PaymentSS, setPaymentSS] = useState(null);
+
+
+  const [alertOpen, setAlertOpen] = useState(false);
+  const [alertMessage, setAlertMessage] = useState("");
+  const [alertSeverity, setAlertSeverity] = useState("success");
 
   // ✅ Get logged in user from localStorage
   useEffect(() => {
@@ -92,18 +98,24 @@ function BookingPage() {
 
       if (!bookingRes.ok) {
         const error = await bookingRes.json();
-        alert("❌ Booking Failed: " + (error.message || "Something went wrong"));
+        setAlertSeverity("error");
+        setAlertMessage("❌ Booking Failed: " + (error.message || "Something went wrong"));
+        setAlertOpen(true);
         return;
       }
 
-      const bookingResult = await bookingRes.json();
-      alert("✅ Booking Completed Successfully");
+      // Success
+      setAlertSeverity("success");
+      setAlertMessage("✅ Booking Completed Successfully!");
+      setAlertOpen(true);
 
-      // 👉 Redirect user to MyBookings with their userId
-      navigate(`/bookings/${formData.UserId}`);
+      // Redirect after short delay
+      setTimeout(() => navigate("/MyBookings"), 1500);
     } catch (error) {
       console.error("Error:", error);
-      alert("⚠️ Error submitting booking");
+      setAlertSeverity("error");
+      setAlertMessage("⚠️ Error submitting booking");
+      setAlertOpen(true);
     }
   };
 
@@ -126,9 +138,8 @@ function BookingPage() {
               <h5 className="mb-3">Booking Details</h5>
 
               <div className="mb-3">
-                <label className="form-label">User ID</label>
                 <input
-                  type="number"
+                  type="hidden"
                   name="UserId"
                   value={formData.UserId}
                   onChange={handleChange}
@@ -138,9 +149,8 @@ function BookingPage() {
               </div>
 
               <div className="mb-3">
-                <label className="form-label">Bike ID</label>
                 <input
-                  type="number"
+                  type="hidden"
                   name="BikeId"
                   value={formData.BikeId}
                   onChange={handleChange}
@@ -149,15 +159,15 @@ function BookingPage() {
                 />
               </div>
 
-              <div className="mb-3">
+              {/* <div className="mb-3">
                 <label className="form-label">Bike Name</label>
                 <input
-                  type="text"
+                  type="hideen"
                   value={bikeName}
                   readOnly
                   className="form-control bg-light fw-bold"
                 />
-              </div>
+              </div> */}
 
               <div className="mb-3">
                 <label className="form-label">Booking Date</label>
@@ -238,6 +248,25 @@ function BookingPage() {
           </button>
         </form>
       </div>
+
+      <Snackbar
+        open={alertOpen}
+        autoHideDuration={4000}
+        onClose={() => setAlertOpen(false)}
+        anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+      >
+        <Alert
+          onClose={() => setAlertOpen(false)}
+          severity={alertSeverity}
+          variant="filled"
+          sx={{ width: "100%" }}
+        >
+          {alertMessage}
+        </Alert>
+      </Snackbar>
+
+
+
     </div>
   );
 }

@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
+import { useNavigate } from "react-router-dom"; // ✅ add this at top with other imports
+
 
 function BookingDetails() {
   const { id } = useParams();

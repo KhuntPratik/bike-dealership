@@ -19,7 +19,7 @@ function BikeDetails() {
   // ✅ Fetch bike details
   useEffect(() => {
     console.log("URL parameter ID:", id);
-    fetch(`http://localhost:5275/api/Bike/${id}`)
+    fetch(`http://localhost:5275/api/Bike/GetById/${id}`)
       .then((res) => res.json())
       .then((data) => {
         console.log("Bike data fetched:", data);

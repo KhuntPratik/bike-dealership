@@ -109,175 +109,170 @@ const Register = () => {
   };
 
   return (
-    <section id="contact" className="mt-5">
-      <div className="container">
-        <h2 className="text-center section-title text-white mb-5">Register</h2>
-        <div className="row justify-content-center">
-          <div className="col-md-6">
+    <div
+      className="min-vh-100 d-flex align-items-center justify-content-center px-3 mt-5"
+      style={{ 
+        background:
+          "linear-gradient(135deg, rgba(13,110,253,0.08) 0%, rgba(220,53,69,0.08) 100%)",
+      }}
+    >
+      <div className="container mt-5 mb-5" style={{ maxWidth: "560px" }}>
+        <div className="card border-0 shadow-lg rounded-4 overflow-hidden">
+          <div className="p-4 p-md-5 bg-white">
+            <div className="text-center mb-4">
+              <div
+                className="rounded-circle d-inline-flex align-items-center justify-content-center mb-3"
+                style={{ width: 64, height: 64, background: "#f3f6ff" }}
+                aria-hidden="true"
+              >
+                <i className="fas fa-user-plus" style={{ color: "#0d6efd", fontSize: 24 }}></i>
+              </div>
+              <h2 className="h3 fw-bold mb-1">Create your account</h2>
+              <p className="text-muted mb-0">Join and explore the best bike deals</p>
+            </div>
+
             <form onSubmit={handleSubmit}>
               {error && (
-                <div
-                  className="alert alert-danger"
-                  style={{ whiteSpace: "pre-line" }}
-                >
+                <div className="alert alert-danger" style={{ whiteSpace: "pre-line" }}>
                   {error}
                 </div>
               )}
-              {success && (
-                <div className="alert alert-success">{success}</div>
-              )}
+              {success && <div className="alert alert-success">{success}</div>}
 
-              {/* Full Name */}
-              <div className="mb-4">
-                <label className="form-label text-white">
-                  <i className="fas fa-user me-2"></i>Full Name
-                </label>
+              <div className="form-floating mb-3">
                 <input
                   type="text"
                   name="fullName"
                   className="form-control"
+                  id="regFullName"
                   placeholder="Full Name"
                   value={form.fullName}
                   onChange={handleChange}
                   required
+                  autoComplete="name"
                 />
+                <label htmlFor="regFullName">Full Name</label>
               </div>
 
-              {/* Email */}
-              <div className="mb-4">
-                <label className="form-label text-white">
-                  <i className="fas fa-envelope me-2"></i>Email
-                </label>
+              <div className="form-floating mb-3">
                 <input
                   type="email"
                   name="email"
                   className="form-control"
+                  id="regEmail"
                   placeholder="Email"
                   value={form.email}
                   onChange={handleChange}
                   required
+                  autoComplete="email"
                 />
+                <label htmlFor="regEmail">Email</label>
               </div>
 
-              {/* Phone Number */}
-              <div className="mb-4">
-                <label className="form-label text-white">
-                  <i className="fas fa-phone me-2"></i>Phone Number
-                </label>
+              <div className="form-floating mb-3">
                 <input
                   type="tel"
                   name="phoneNumber"
                   className="form-control"
+                  id="regPhone"
                   placeholder="Phone Number"
                   value={form.phoneNumber}
                   onChange={handleChange}
                   required
+                  autoComplete="tel"
                 />
+                <label htmlFor="regPhone">Phone Number</label>
               </div>
 
-              {/* Date of Birth */}
-              <div className="mb-4">
-                <label className="form-label text-white">
-                  <i className="fas fa-calendar me-2"></i>Date of Birth
-                </label>
-                <input
-                  type="date"
-                  name="dateOfBirth"
-                  className="form-control"
-                  value={form.dateOfBirth}
-                  onChange={handleChange}
-                  required
-                />
-              </div>
-
-              {/* Gender */}
-              <div className="mb-4">
-                <label className="form-label text-white">
-                  <i className="fas fa-venus-mars me-2"></i>Gender
-                </label>
-                <div className="form-check">
-                  <input
-                    className="form-check-input"
-                    type="radio"
-                    name="gender"
-                    id="genderMale"
-                    value="Male"
-                    checked={form.gender === "Male"}
-                    onChange={handleChange}
-                  />
-                  <label
-                    className="form-check-label text-white"
-                    htmlFor="genderMale"
-                  >
-                    Male
-                  </label>
+              <div className="row g-3">
+                <div className="col-md-6">
+                  <div className="form-floating mb-3 mb-md-0">
+                    <input
+                      type="date"
+                      name="dateOfBirth"
+                      className="form-control"
+                      id="regDob"
+                      placeholder="Date of Birth"
+                      value={form.dateOfBirth}
+                      onChange={handleChange}
+                      required
+                    />
+                    <label htmlFor="regDob">Date of Birth</label>
+                  </div>
                 </div>
-                <div className="form-check">
-                  <input
-                    className="form-check-input"
-                    type="radio"
-                    name="gender"
-                    id="genderFemale"
-                    value="Female"
-                    checked={form.gender === "Female"}
-                    onChange={handleChange}
-                  />
-                  <label
-                    className="form-check-label text-white"
-                    htmlFor="genderFemale"
-                  >
-                    Female
-                  </label>
+                <div className="col-md-6">
+                  <div className="mb-3">
+                    <label className="form-label d-block">Gender</label>
+                    <div className="d-flex gap-3">
+                      <div className="form-check">
+                        <input
+                          className="form-check-input"
+                          type="radio"
+                          name="gender"
+                          id="genderMale"
+                          value="Male"
+                          checked={form.gender === "Male"}
+                          onChange={handleChange}
+                        />
+                        <label className="form-check-label" htmlFor="genderMale">Male</label>
+                      </div>
+                      <div className="form-check">
+                        <input
+                          className="form-check-input"
+                          type="radio"
+                          name="gender"
+                          id="genderFemale"
+                          value="Female"
+                          checked={form.gender === "Female"}
+                          onChange={handleChange}
+                        />
+                        <label className="form-check-label" htmlFor="genderFemale">Female</label>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
 
-              {/* Password */}
-              <div className="mb-4">
-                <label className="form-label text-white">
-                  <i className="fas fa-lock me-2"></i>Password
-                </label>
+              <div className="form-floating mb-3">
                 <input
                   type="password"
                   name="password"
                   className="form-control"
+                  id="regPassword"
                   placeholder="Password"
                   value={form.password}
                   onChange={handleChange}
                   required
+                  autoComplete="new-password"
                 />
+                <label htmlFor="regPassword">Password</label>
               </div>
 
-              {/* Hidden fixed role */}
               <input type="hidden" name="role" value={form.role} readOnly />
 
-              {/* Submit button */}
-              <div className="d-flex justify-content-center mb-3">
-                <button
-                  type="submit"
-                  className="btn btn-custom"
-                  disabled={loading}
-                >
-                  {loading ? (
-                    "Registering..."
-                  ) : (
-                    <>
-                      <i className="fas fa-user-plus me-2"></i>Register
-                    </>
-                  )}
-                </button>
-              </div>
+              <button
+                type="submit"
+                className="btn w-100 py-2 fw-semibold"
+                disabled={loading}
+                style={{
+                  background: "linear-gradient(135deg, #0d6efd 0%, #6f42c1 100%)",
+                  color: "#fff",
+                  border: 0,
+                  borderRadius: 12,
+                }}
+              >
+                {loading ? "Registering..." : "Create Account"}
+              </button>
 
-              <div className="text-center">
-                <span className="text-white">Already have an account? </span>
-                <a href="/login" className="text-warning fw-bold">
-                  Login
-                </a>
+              <div className="text-center mt-4">
+                <span className="text-muted">Already have an account? </span>
+                <a href="/login" className="text-decoration-none">Sign in</a>
               </div>
             </form>
           </div>
         </div>
       </div>
-    </section>
+    </div>
   );
 };
 

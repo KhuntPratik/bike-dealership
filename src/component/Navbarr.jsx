@@ -126,7 +126,7 @@ const Navbarr = () => {
                 <span className="avatar-initial me-2">{userInitial}</span>
                 {isAuthenticated() && (
                   <span className="user-role-badge">
-                    {userInfo?.role || user?.role}
+                    {userInfo?.username || user?.username}
                   </span>
                 )}
               </a>
@@ -147,11 +147,16 @@ const Navbarr = () => {
                 ) : (
                   <>
                     <li className="dropdown-header">
-                      <div className="user-info">
-                        <strong>{userInfo?.username || 'User'}</strong>
-                        <small className="text-muted d-block">
-                          {userInfo?.role || user?.role}
-                        </small>
+                      <div className="user-info d-flex align-items-center">
+                        <div className="user-avatar me-3">
+                          <span className="avatar-initial">{userInitial}</span>
+                        </div>
+                        <div className="user-details">
+                          <strong className="d-block">{userInfo?.username || 'User'}</strong>
+                          <small className="text-muted">
+                            {userInfo?.role || user?.role}
+                          </small>
+                        </div>
                       </div>
                     </li>
                     <li><hr className="dropdown-divider" /></li>
